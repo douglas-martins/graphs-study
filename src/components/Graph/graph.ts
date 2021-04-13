@@ -3,21 +3,25 @@ import { Edge } from '@components/Graph/edge';
 import { GraphType } from '@components/Graph/graphType';
 
 export class Graph {
-    private adjacencyList: Array<Vertex>;
+    private readonly _adjacencyList: Array<Vertex>;
 
     private readonly type: GraphType;
 
     constructor(graphType: GraphType) {
-        this.adjacencyList = new Array<Vertex>();
+        this._adjacencyList = new Array<Vertex>();
         this.type = graphType;
     }
 
+    public get adjacencyList(): Array<Vertex> {
+        return this._adjacencyList;
+    }
+
     public addVertex(newVertex: Vertex): boolean {
-        if (this.adjacencyList.find(({ name }) => name === newVertex.name)) {
+        if (this._adjacencyList.find(({ name }) => name === newVertex.name)) {
             return true;
         }
 
-        this.adjacencyList.push(newVertex);
+        this._adjacencyList.push(newVertex);
         return true;
     }
 
@@ -27,7 +31,7 @@ export class Graph {
         if (hasVertexOne) {
             const edgeOneTWo = new Edge(vertexTwoName, value);
             hasVertexOne.edges.push(edgeOneTWo);
-            if (this.type == GraphType.UNDIRECTED) {
+            if (this.type === GraphType.UNDIRECTED) {
                 const hasVertexTwo: Vertex | undefined = this.checkVertexExists(vertexTwoName);
                 if (hasVertexTwo) {
                     const edgeTwoOne = new Edge(vertexOneName, value);
@@ -64,7 +68,7 @@ export class Graph {
 
         while(stack.length > 0) {
             const name = stack.pop();
-            const currentVertex = this.adjacencyList.find((vertex) => vertex.name === name);
+            const currentVertex = this._adjacencyList.find((vertex) => vertex.name === name);
             if (currentVertex && !visited[currentVertex.name]) {
                 visited[currentVertex.name] = true;
                 result.push(currentVertex.name);
@@ -88,7 +92,7 @@ export class Graph {
 
         while(queue.length > 0) {
             const name: string | undefined = queue.shift();
-            const currentVertex = this.adjacencyList.find((v) => v.name === name);
+            const currentVertex = this._adjacencyList.find((v) => v.name === name);
             if (name && currentVertex && !visited[currentVertex.name]) {
                 visited[currentVertex.name] = true;
                 result.push(currentVertex.name);
@@ -105,7 +109,7 @@ export class Graph {
     }
 
     private checkVertexExists(vertexName: string): Vertex | undefined {
-        const hasVertex: Vertex | undefined = this.adjacencyList.find(({ name }) => name === vertexName);
+        const hasVertex: Vertex | undefined = this._adjacencyList.find(({ name }) => name === vertexName);
 
         if (!hasVertex) {
             console.warn(`[Graph - this.addEdge()] - Graph has no vertex with name ${vertexName}`);

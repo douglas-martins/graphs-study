@@ -3,7 +3,7 @@ import { Edge } from '@components/Graph/edge';
 import { GraphType } from '@components/Graph/graphType';
 
 export class Graph {
-    private readonly _adjacencyList: Array<Vertex>;
+    private _adjacencyList: Array<Vertex>;
 
     private readonly type: GraphType;
 
@@ -16,6 +16,10 @@ export class Graph {
         return this._adjacencyList;
     }
 
+    public set adjacencyList(newAdjacencyList: Array<Vertex>) {
+        this._adjacencyList = newAdjacencyList;
+    }
+
     public addVertex(newVertex: Vertex): boolean {
         if (this._adjacencyList.find(({ name }) => name === newVertex.name)) {
             return true;
@@ -23,6 +27,24 @@ export class Graph {
 
         this._adjacencyList.push(newVertex);
         return true;
+    }
+
+    public removeVertex(vertexName: string): boolean {
+        const hasVertex: Vertex | undefined = this.checkVertexExists(vertexName);
+
+        if (hasVertex) {
+            if (this.type === GraphType.UNDIRECTED) {
+                hasVertex.edges.forEach(edge => {
+                    const parentVertex = this.adjacencyList.find(({ name }) => name === edge.name);
+                    if (parentVertex) {
+                        parentVertex.edges = parentVertex.edges.filter(parentEdg => parentEdg.name !== vertexName)
+                    }
+                })
+            }
+            this.adjacencyList = this.adjacencyList.filter(vertex => vertex.name !== vertexName);
+        }
+
+        return false;
     }
 
     public addEdge(vertexOneName: string, vertexTwoName: string, value: number): boolean {

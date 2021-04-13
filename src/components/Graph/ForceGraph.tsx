@@ -5,12 +5,18 @@ import { GraphType } from '@components/Graph/graphType';
 import { Vertex } from '@components/Graph/vertex';
 import { ForceGraph3D } from "react-force-graph";
 
+type GraphDataNode = { id: string, name: string, value: number };
+type GraphDataLink = { source: string, target: string };
+type GraphData = {
+    nodes: Array<GraphDataNode>,
+    links: Array<{ source: string, target: string }>
+};
 
 const ForceGraph = (): JSX.Element => {
     const graph = new Graph(GraphType.UNDIRECTED)
     const [graphData, setGraphData] = useState({
-        nodes: new Array<{ id: string, name: string, value: number }>(),
-        links: new Array<{ source: string, target: string }>(),
+        nodes: new Array<GraphDataNode>(),
+        links: new Array<GraphDataLink>(),
     });
 
     useEffect(() => {
@@ -25,12 +31,9 @@ const ForceGraph = (): JSX.Element => {
     }, []);
 
     const parseGraph = (): void => {
-        const newGraphData: {
-            nodes: Array<{ id: string, name: string, value: number }>,
-            links: Array<{ source: string, target: string }>
-        } = {
-            links: new Array<{ source: string, target: string }>(),
-            nodes: new Array<{ id: string, name: string, value: number }>(),
+        const newGraphData: GraphData = {
+            links: new Array<GraphDataLink>(),
+            nodes: new Array<GraphDataNode>(),
         };
 
         for (const vertex of graph.adjacencyList) {

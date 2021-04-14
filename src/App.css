@@ -2,6 +2,13 @@
   text-align: center;
 }
 
+.application-body {
+  background-color: #000011;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

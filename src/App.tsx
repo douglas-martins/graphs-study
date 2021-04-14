@@ -7,7 +7,7 @@ import ForceGraph from '@components/Graph/ForceGraph';
 import history from './history';
 
 const App = (): JSX.Element => (
-      <div>
+      <div className="application-body">
         <Router history={history}>
           <div>
              <Header />

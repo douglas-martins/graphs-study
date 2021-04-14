@@ -1,6 +1,9 @@
 import React, { FunctionComponent } from "react";
 import { useForm } from 'react-hook-form';
-import { Button, Container, Modal } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
+
+import FormInputError from '@components/Modal/components/FormInputError';
+import "bootstrap/dist/css/bootstrap.css"
 
 type Inputs = {
     name: string,
@@ -25,11 +28,29 @@ const AddVertexModal: FunctionComponent<AddVertexModalProps> =
     return (
         <Container>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <input {...register('name', { required: true })}/>
-                {errors.name && <span>This field is required</span>}
-                <input {...register('label', { required: true })}/>
-                {errors.label && <span>This field is required</span>}
-                <Button type="submit">salvar</Button>
+                <div className="form-row">
+                    <div className="col-4">
+                        <label htmlFor="input-name">
+                            Nome:
+                            <input id="input-name" className="form-control" type="text"
+                                   {...register('name', { required: true })}
+                            />
+                            <FormInputError hasError={errors.name} />
+                        </label>
+                    </div>
+                    <div className="col-4">
+                        <label htmlFor="input-label">
+                            Rotulo:
+                            <input id="input-label" className="form-control" type="text"
+                                   {...register('label', { required: true })}
+                            />
+                            <FormInputError hasError={errors.label} />
+                        </label>
+                    </div>
+                </div>
+                <button className="btn btn-primary float-right" type="submit">
+                    Salvar
+                </button>
             </form>
         </Container>
     )

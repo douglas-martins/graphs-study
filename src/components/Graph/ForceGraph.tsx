@@ -60,8 +60,13 @@ const ForceGraph = (): JSX.Element => {
         parseGraph();
     }
 
-    const removeEdge = (vertexName: string): void => {
+    const removeVertex = (vertexName: string): void => {
         graph.removeVertex(vertexName);
+        parseGraph();
+    }
+
+    const removeEdge = (vertexOneName: string, vertexTwoName: string): void => {
+        graph.removeEdge(vertexOneName, vertexTwoName)
         parseGraph();
     }
 
@@ -71,7 +76,17 @@ const ForceGraph = (): JSX.Element => {
         <button onClick={() => addEdge("name", "name2", 1)} type="button">add edge</button>
         <ForceGraph3D
           graphData={graphData}
-          onNodeClick={(node) => removeEdge(`${node.id}`)}
+          onNodeClick={(node) => removeVertex(`${node.id}`)}
+          onLinkClick={(link) => {
+              const { source, target } = link;
+              if (
+                source && typeof source !== 'string' && typeof source !== 'number' &&
+                target && typeof target !== 'string' && typeof target !== 'number'
+              ) {
+                  removeEdge(`${source.id}`, `${target.id}`);
+              }
+
+          }}
         />
     </>
 };

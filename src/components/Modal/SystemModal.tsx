@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { Button, Modal } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -22,13 +22,6 @@ const SystemModal: FunctionComponent<SystemModalProps> =
                 <Modal.Title>{title}</Modal.Title>
             </Modal.Header>
             <Modal.Body>{body}</Modal.Body>
-            <Modal.Footer>
-                <Button onClick={
-                    (event) => onClickSave(event)
-                }>
-                    salvar
-                </Button>
-            </Modal.Footer>
         </Modal>
     );
 };

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { ForceGraph3D } from "react-force-graph";
 
+import { useModal } from '@components/Modal/customHooks/useModal'
 import { Graph } from '@components/Graph/graph';
 import { GraphType } from '@components/Graph/graphType';
 import { Vertex } from '@components/Graph/vertex';
-import { ForceGraph3D } from "react-force-graph";
 import SystemModal from "@components/Modal/SystemModal";
-import { useModal } from '@components/Modal/customHooks/useModal'
+import AddVertexModal from "@components/Modal/components/AddVertexModal";
 
 type GraphDataNode = { id: string, name: string, value: number };
 type GraphDataLink = { source: string, target: string };
@@ -71,13 +72,13 @@ const ForceGraph = (): JSX.Element => {
         }
 
         const { type, title } = currentModal;
-        // const body: JSX.Element =
+        const body: JSX.Element = type === 'vertex' ? <AddVertexModal addVertex={addVertex} /> : (<div />);
         const onSave: Function = type === 'vertex' ? addVertex : addEdge;
         return (
             <SystemModal
                 size="lg"
                 title={title}
-                body={(<div>{title}</div>)}
+                body={body}
                 onClickSave={onSave}
                 show={show}
                 toggle={toggle}
@@ -91,8 +92,6 @@ const ForceGraph = (): JSX.Element => {
                 onClick={
                     () => changeCurrentModal({ title: 'Vertex Modal', type: 'vertex' })
                 } type="button">add vertix</button>
-            {/* <button onClick={() => addVertex("name2", "vertex")} type="button">add vertix2</button> */}
-            {/* <button onClick={() => addEdge("name", "name2", 1)} type="button">add edge</button> */}
             <ForceGraph3D graphData={graphData} width={1300} height={700} />
             {renderModal()}
         </>

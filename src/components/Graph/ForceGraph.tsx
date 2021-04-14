@@ -10,7 +10,7 @@ const ForceGraph = (): JSX.Element => {
 
     return (
         <>
-            <ForceGraph3D graphData={forceGraphData} height={height - 61} />
+            <ForceGraph3D graphData={forceGraphData} height={height - 61}  nodeAutoColorBy={d => d.name} />
         </>
     );
 };

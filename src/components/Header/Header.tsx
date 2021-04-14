@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Form } from "react-bootstrap";
 
 import { Vertex } from "@components/Graph/vertex";
@@ -6,24 +6,29 @@ import AddVertexModal from "@components/Modal/components/AddVertexModal";
 import AddEdgesModal from "@components/Modal/components/AddEdgesModal";
 import SystemModal from "@components/Modal/SystemModal";
 import { useModal } from "@components/Modal/customHooks/useModal";
+import { Link } from '@components/Graph/link';
+
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useStoreActions, useStoreState } from "../../store/storeHooks";
+import { useStoreState, useStoreActions } from "../../store/storeHooks";
+
 
 const Header = (): JSX.Element => {
     const { show, toggle, currentModal, changeCurrentModal } = useModal();
     const graph = useStoreState((state) => state.graph);
-    // const createNewGraph = useStoreActions((actions) => actions.createNewGraph);
+    const addVertex = useStoreActions((actions) => actions.addVertex);
+    const addEdge = useStoreActions((actions) => actions.addEdge);
 
-    const addVertex: Function = (name: string, label: string): void => {
+    const handleAddVertex: Function = (name: string, label: string): void => {
         const vertex = new Vertex(name, label);
-        graph.addVertex(vertex);
+        addVertex(vertex);
         toggle();
     }
 
-    const addEdge: Function =
+    const handleAddEdge: Function =
         (vertexOne: string, vertexTwo: string, value: number): void => {
-            graph.addEdge(vertexOne, vertexTwo, value);
+            const link = new Link(vertexOne, vertexTwo, value);
+            addEdge(link);
             toggle();
         }
 
@@ -34,9 +39,9 @@ const Header = (): JSX.Element => {
 
         const { type, title } = currentModal;
         const body: JSX.Element = type === 'vertex' ?
-            <AddVertexModal addVertex={addVertex} /> :
-            (<AddEdgesModal addEdge={addEdge} vertexes={graph.adjacencyList} />);
-        const onSave: Function = type === 'vertex' ? addVertex : addEdge;
+            <AddVertexModal addVertex={handleAddVertex} /> :
+            (<AddEdgesModal addEdge={handleAddEdge} vertexes={graph.adjacencyList} />);
+        const onSave: Function = type === 'vertex' ? handleAddVertex : handleAddEdge;
         return (
             <SystemModal
                 size="lg"

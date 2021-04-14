@@ -20,18 +20,10 @@ const ForceGraph = (): JSX.Element => {
     });
 
     useEffect(() => {
-        // const vertex1 = new Vertex("test", "OPque diabos é um rotulo?")
-        // const vertex2 = new Vertex("test 2", "OPque diabos é um rotulo?")
-        // graph.addVertex(vertex1);
-        // graph.addVertex(vertex2);
-        // graph.addEdge("test", "test 2", 2)
-        // // console.log(graphData);
-        // // console.log(graphData.bfsTraversalIterative("test"))
-
         if (graph.adjacencyList.length > 0) {
             parseGraph();
         }
-    }, [graph.adjacencyList]);
+    }, [graph.adjacencyList]); // eslint-disable-line
 
     const parseGraph = (): void => {
         const newGraphData: GraphData = {
@@ -53,7 +45,7 @@ const ForceGraph = (): JSX.Element => {
                 });
             }
         }
-        console.log(newGraphData)
+
         setGraphData(newGraphData);
     };
 
@@ -68,11 +60,19 @@ const ForceGraph = (): JSX.Element => {
         parseGraph();
     }
 
+    const removeEdge = (vertexName: string): void => {
+        graph.removeVertex(vertexName);
+        parseGraph();
+    }
+
     return <>
         <button onClick={() => addVertex("name", "vertex")} type="button">add vertix</button>
         <button onClick={() => addVertex("name2", "vertex")} type="button">add vertix2</button>
         <button onClick={() => addEdge("name", "name2", 1)} type="button">add edge</button>
-        <ForceGraph3D graphData={graphData} />
+        <ForceGraph3D
+          graphData={graphData}
+          onNodeClick={(node) => removeEdge(`${node.id}`)}
+        />
     </>
 };
 

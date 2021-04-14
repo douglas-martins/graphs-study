@@ -76,6 +76,7 @@ const ForceGraph = (): JSX.Element => {
         <button onClick={() => addEdge("name", "name2", 1)} type="button">add edge</button>
         <ForceGraph3D
           graphData={graphData}
+          nodeAutoColorBy={d => `${d.id}`}
           onNodeClick={(node) => removeVertex(`${node.id}`)}
           onLinkClick={(link) => {
               const { source, target } = link;

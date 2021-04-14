@@ -4,6 +4,8 @@ import { Graph } from '@components/Graph/graph';
 import { GraphType } from '@components/Graph/graphType';
 import { Vertex } from '@components/Graph/vertex';
 import { ForceGraph3D } from "react-force-graph";
+import SystemModal from "@components/Modal/SystemModal";
+import { useModal } from '@components/Modal/customHooks/useModal'
 
 type GraphDataNode = { id: string, name: string, value: number };
 type GraphDataLink = { source: string, target: string };
@@ -13,6 +15,7 @@ type GraphData = {
 };
 
 const ForceGraph = (): JSX.Element => {
+    const { show, toggle, currentModal, changeCurrentModal } = useModal();
     const [graph] = useState(new Graph(GraphType.UNDIRECTED));
     const [graphData, setGraphData] = useState({
         nodes: new Array<GraphDataNode>(),
@@ -23,7 +26,7 @@ const ForceGraph = (): JSX.Element => {
         if (graph.adjacencyList.length > 0) {
             parseGraph();
         }
-    }, [graph.adjacencyList]); // eslint-disable-line
+    }, [graph.adjacencyList]);
 
     const parseGraph = (): void => {
         const newGraphData: GraphData = {
@@ -45,51 +48,55 @@ const ForceGraph = (): JSX.Element => {
                 });
             }
         }
-
+        console.log(newGraphData)
         setGraphData(newGraphData);
+        toggle();
     };
 
-    const addVertex = (name: string, label: string): void => {
+    const addVertex: Function = (name: string, label: string): void => {
         const vertex = new Vertex(name, label);
         graph.addVertex(vertex);
         parseGraph();
     }
 
-    const addEdge = (vertexOne: string, vertexTwo: string, value: number): void => {
+    const addEdge: Function =
+        (vertexOne: string, vertexTwo: string, value: number): void => {
         graph.addEdge(vertexOne, vertexTwo, value);
         parseGraph();
     }
 
-    const removeVertex = (vertexName: string): void => {
-        graph.removeVertex(vertexName);
-        parseGraph();
+    const renderModal: Function = (): JSX.Element | boolean => {
+        if (!show) {
+            return false;
+        }
+
+        const { type, title } = currentModal;
+        // const body: JSX.Element =
+        const onSave: Function = type === 'vertex' ? addVertex : addEdge;
+        return (
+            <SystemModal
+                size="lg"
+                title={title}
+                body={(<div>{title}</div>)}
+                onClickSave={onSave}
+                show={show}
+                toggle={toggle}
+            />
+        );
     }
 
-    const removeEdge = (vertexOneName: string, vertexTwoName: string): void => {
-        graph.removeEdge(vertexOneName, vertexTwoName)
-        parseGraph();
-    }
-
-    return <>
-        <button onClick={() => addVertex("name", "vertex")} type="button">add vertix</button>
-        <button onClick={() => addVertex("name2", "vertex")} type="button">add vertix2</button>
-        <button onClick={() => addEdge("name", "name2", 1)} type="button">add edge</button>
-        <ForceGraph3D
-          graphData={graphData}
-          nodeAutoColorBy={d => `${d.id}`}
-          onNodeClick={(node) => removeVertex(`${node.id}`)}
-          onLinkClick={(link) => {
-              const { source, target } = link;
-              if (
-                source && typeof source !== 'string' && typeof source !== 'number' &&
-                target && typeof target !== 'string' && typeof target !== 'number'
-              ) {
-                  removeEdge(`${source.id}`, `${target.id}`);
-              }
-
-          }}
-        />
-    </>
+    return (
+        <>
+            <button
+                onClick={
+                    () => changeCurrentModal({ title: 'Vertex Modal', type: 'vertex' })
+                } type="button">add vertix</button>
+            {/* <button onClick={() => addVertex("name2", "vertex")} type="button">add vertix2</button> */}
+            {/* <button onClick={() => addEdge("name", "name2", 1)} type="button">add edge</button> */}
+            <ForceGraph3D graphData={graphData} width={1300} height={700} />
+            {renderModal()}
+        </>
+    );
 };
 
 export default ForceGraph;

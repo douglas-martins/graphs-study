@@ -17,10 +17,10 @@ export type GraphData = {
 const ForceGraph = (): JSX.Element => {
     const { show, toggle, currentModal, changeCurrentModal } = useModal();
     const { height } = useWindowDimensions();
-    const { graph, graphData, updateGraphData } = useGraph();
+    const { graphData, updateGraphData } = useGraph();
 
-    const todos = useStoreState((state) => state.todos);
-    const addTodo = useStoreActions((actions) => actions.addTodo);
+    const graph = useStoreState((state) => state.graph);
+    const createNewGraph = useStoreActions((actions) => actions.createNewGraph);
 
 
     console.log(graphData)

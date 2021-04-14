@@ -70,7 +70,7 @@ export class Graph {
 
         if (hasVertexOne) {
             hasVertexOne.edges = hasVertexOne.edges.filter((vertex) => vertex.name !== vertexTwoName);
-            if (this.type == GraphType.UNDIRECTED) {
+            if (this.type === GraphType.UNDIRECTED) {
                 const hasVertexTwo: Vertex | undefined = this.checkVertexExists(vertexTwoName);
                 if (hasVertexTwo) {
                     hasVertexTwo.edges = hasVertexTwo.edges.filter((vertex) => vertex.name !== vertexOneName);
@@ -134,7 +134,6 @@ export class Graph {
         const hasVertex: Vertex | undefined = this._adjacencyList.find(({ name }) => name === vertexName);
 
         if (!hasVertex) {
-            console.warn(`[Graph - this.addEdge()] - Graph has no vertex with name ${vertexName}`);
             return undefined;
         }
 

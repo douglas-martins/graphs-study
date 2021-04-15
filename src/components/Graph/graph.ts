@@ -130,6 +130,36 @@ export class Graph {
         return result;
     }
 
+    public prim() {
+        if (this.type ===  GraphType.DIRECTED) {
+            throw new Error("Prim algorithms works only for undirected graphs")
+        }
+
+        const agm = new Graph(GraphType.UNDIRECTED);
+        const visited = Array<Vertex>();
+        let edgesToCheck: Edge[];
+        const startNode = this.adjacencyList[0];
+
+        agm.addVertex(new Vertex(startNode.name, startNode.label));
+
+        visited.push(startNode);
+        edgesToCheck = startNode.edges;
+
+        // Como fazer o link
+        while (visited.length < this.adjacencyList.length) {
+            const minValueEdge : Edge = edgesToCheck.sort((a, b) => a.value - b.value)[0];
+            const minValueVertex : Vertex = this.adjacencyList.filter(({ name }) => name === minValueEdge.name)[0];
+
+            edgesToCheck = edgesToCheck.filter(edge => edge !== minValueEdge).concat(minValueVertex.edges);
+
+            agm.addVertex(new Vertex(minValueVertex.name, minValueVertex.label));
+
+            visited.push(minValueVertex);
+        }
+
+        console.log(visited);
+    }
+
     private checkVertexExists(vertexName: string): Vertex | undefined {
         const hasVertex: Vertex | undefined = this._adjacencyList.find(({ name }) => name === vertexName);
 

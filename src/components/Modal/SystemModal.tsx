@@ -14,7 +14,7 @@ export interface SystemModalProps {
 
 const SystemModal: FunctionComponent<SystemModalProps> =
     (props: SystemModalProps): JSX.Element => {
-    const { size, title, body, onClickSave, show, toggle } = props;
+    const { size, title, body, show, toggle } = props;
 
     return (
         <Modal show={show} onHide={toggle} size={size} centered>

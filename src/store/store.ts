@@ -29,7 +29,7 @@ const store = createStore<StoreModel>({
   }),
 
   onChangeGraph: actionOn(
-    actions => [actions.addEdge, actions.addVertex],
+    actions => [actions.addEdge, actions.addVertex, actions.createNewGraph],
     (state, payload) => {
       state.forceGraphData = parseGraph(state.graph);
     }

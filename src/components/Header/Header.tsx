@@ -69,11 +69,12 @@ const Header = (): JSX.Element => {
         createNewGraph(newType);
     };
     
-    const renderRunAlgorithmsDropdownOptions = (): JSX.Element[] => (['bfs', 'dfs', 'prim', 'roy'].map((algorithm, index) => (
+    const renderRunAlgorithmsDropdownOptions = (): JSX.Element[] =>
+        (['BFS', 'DFS', 'PRIM', 'Roy'].map((algorithm, index) => (
                 <Dropdown.Item key={algorithm} eventKey={index.toString()}
                     onClick={() => {
-                        if (algorithms[algorithm]) {
-                            algorithms[algorithm]();
+                        if (algorithms[algorithm.toLowerCase()]) {
+                            algorithms[algorithm.toLowerCase()]();
                         }
                     }}
                 >

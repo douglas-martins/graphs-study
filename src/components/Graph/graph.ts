@@ -1,6 +1,7 @@
 import { Vertex } from '@components/Graph/vertex';
 import { Edge } from '@components/Graph/edge';
 import { GraphType } from '@components/Graph/graphType';
+import { EdgeToCheck } from '@components/Graph/prim/EdgeToCheck';
 
 export class Graph {
     private _adjacencyList: Array<Vertex>;
@@ -130,34 +131,38 @@ export class Graph {
         return result;
     }
 
-    public prim() {
-        if (this.type ===  GraphType.DIRECTED) {
+    public prim() : Graph {
+        if (this.type === GraphType.DIRECTED) {
             throw new Error("Prim algorithms works only for undirected graphs")
         }
 
         const agm = new Graph(GraphType.UNDIRECTED);
         const visited = Array<Vertex>();
-        let edgesToCheck: Edge[];
+        const visitedNames = Array<string>();
+        let edgesToCheck: Array<EdgeToCheck>;
         const startNode = this.adjacencyList[0];
 
         agm.addVertex(new Vertex(startNode.name, startNode.label));
 
         visited.push(startNode);
-        edgesToCheck = startNode.edges;
+        visitedNames.push(startNode.name);
+        edgesToCheck = startNode.edges.map(edge => new EdgeToCheck(startNode.name, edge));
 
-        // Como fazer o link
         while (visited.length < this.adjacencyList.length) {
-            const minValueEdge : Edge = edgesToCheck.sort((a, b) => a.value - b.value)[0];
-            const minValueVertex : Vertex = this.adjacencyList.filter(({ name }) => name === minValueEdge.name)[0];
+            const minValueEdge : EdgeToCheck = edgesToCheck.sort((a, b) => a.edge.value - b.edge.value)[0];
+            const minValueVertex : Vertex = this.adjacencyList.filter(({ name }) => name === minValueEdge.edge.name)[0];
 
-            edgesToCheck = edgesToCheck.filter(edge => edge !== minValueEdge).concat(minValueVertex.edges);
+            edgesToCheck = edgesToCheck.filter(edgeToCheck => edgeToCheck !== minValueEdge).concat(minValueVertex.edges.map(edge => new EdgeToCheck(minValueVertex.name, edge)));
+            edgesToCheck = edgesToCheck.filter(edgeToCheck => !visitedNames.includes(edgeToCheck.edge.name));
 
             agm.addVertex(new Vertex(minValueVertex.name, minValueVertex.label));
+            agm.addEdge(minValueEdge.vertexName, minValueVertex.name, minValueEdge.edge.value);
 
             visited.push(minValueVertex);
+            visitedNames.push(minValueVertex.name);
         }
 
-        console.log(visited);
+        return agm;
     }
 
     private checkVertexExists(vertexName: string): Vertex | undefined {

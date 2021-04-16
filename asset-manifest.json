@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/graphs-study/static/css/main.136a1ad6.chunk.css",
-    "main.js": "/graphs-study/static/js/main.c431713b.chunk.js",
-    "main.js.map": "/graphs-study/static/js/main.c431713b.chunk.js.map",
-    "runtime-main.js": "/graphs-study/static/js/runtime-main.17a09abe.js",
-    "runtime-main.js.map": "/graphs-study/static/js/runtime-main.17a09abe.js.map",
+    "main.css": "/graphs-study/static/css/main.9584abdf.chunk.css",
+    "main.js": "/graphs-study/static/js/main.ee36489b.chunk.js",
+    "main.js.map": "/graphs-study/static/js/main.ee36489b.chunk.js.map",
+    "runtime-main.js": "/graphs-study/static/js/runtime-main.5bcb3bb3.js",
+    "runtime-main.js.map": "/graphs-study/static/js/runtime-main.5bcb3bb3.js.map",
     "static/css/2.040c2062.chunk.css": "/graphs-study/static/css/2.040c2062.chunk.css",
-    "static/js/2.05c8a954.chunk.js": "/graphs-study/static/js/2.05c8a954.chunk.js",
-    "static/js/2.05c8a954.chunk.js.map": "/graphs-study/static/js/2.05c8a954.chunk.js.map",
-    "static/js/3.57b7daec.chunk.js": "/graphs-study/static/js/3.57b7daec.chunk.js",
-    "static/js/3.57b7daec.chunk.js.map": "/graphs-study/static/js/3.57b7daec.chunk.js.map",
+    "static/js/2.26c5f3e3.chunk.js": "/graphs-study/static/js/2.26c5f3e3.chunk.js",
+    "static/js/2.26c5f3e3.chunk.js.map": "/graphs-study/static/js/2.26c5f3e3.chunk.js.map",
+    "static/js/3.ea351293.chunk.js": "/graphs-study/static/js/3.ea351293.chunk.js",
+    "static/js/3.ea351293.chunk.js.map": "/graphs-study/static/js/3.ea351293.chunk.js.map",
     "index.html": "/graphs-study/index.html",
     "static/css/2.040c2062.chunk.css.map": "/graphs-study/static/css/2.040c2062.chunk.css.map",
-    "static/css/main.136a1ad6.chunk.css.map": "/graphs-study/static/css/main.136a1ad6.chunk.css.map",
-    "static/js/2.05c8a954.chunk.js.LICENSE.txt": "/graphs-study/static/js/2.05c8a954.chunk.js.LICENSE.txt"
+    "static/css/main.9584abdf.chunk.css.map": "/graphs-study/static/css/main.9584abdf.chunk.css.map",
+    "static/js/2.26c5f3e3.chunk.js.LICENSE.txt": "/graphs-study/static/js/2.26c5f3e3.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.17a09abe.js",
+    "static/js/runtime-main.5bcb3bb3.js",
     "static/css/2.040c2062.chunk.css",
-    "static/js/2.05c8a954.chunk.js",
-    "static/css/main.136a1ad6.chunk.css",
-    "static/js/main.c431713b.chunk.js"
+    "static/js/2.26c5f3e3.chunk.js",
+    "static/css/main.9584abdf.chunk.css",
+    "static/js/main.ee36489b.chunk.js"
   ]
 }

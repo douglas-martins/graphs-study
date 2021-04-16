@@ -13,7 +13,7 @@ import ProjectInfoModal from "@components/Modal/components/ProjectInfoModal";
 import { useModal } from "@components/Modal/customHooks/useModal";
 import { Link } from '@components/Graph/link';
 import { GraphType } from "@components/Graph/graphType";
-import { getBfsTemplate, getPrimTemplate } from '@components/Graph/templates';
+import { getBfsDfsTemplate, getPrimTemplate } from '@components/Graph/templates';
 import { useStoreState, useStoreActions } from "../../store/storeHooks";
 
 import { graphIcon } from './utils';
@@ -50,9 +50,11 @@ const Header = (): JSX.Element => {
 
     const samples: { [key: string]: () => void }  = {
         bfs () {
-            setGraph(getBfsTemplate())
+            setGraph(getBfsDfsTemplate());
         },
-        dfs: () => console.log('add DFS sample'),
+        dfs () {
+            setGraph(getBfsDfsTemplate());
+        },
         prim () {
             setGraph(getPrimTemplate());
         },

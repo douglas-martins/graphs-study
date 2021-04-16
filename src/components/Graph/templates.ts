@@ -31,7 +31,7 @@ export function getPrimTemplate(): Graph {
   return primGraph;
 }
 
-export function getBfsTemplate(): Graph  {
+export function getBfsDfsTemplate(): Graph  {
   const bfsGraph = new Graph(GraphType.UNDIRECTED);
 
   bfsGraph.addVertex(new Vertex("1", "1"));

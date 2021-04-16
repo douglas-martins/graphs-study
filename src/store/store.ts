@@ -45,12 +45,9 @@ const store = createStore<StoreModel>({
   }),
 
   runDfs: action((state, payload) => {
-    console.info('Run DFS algorithm');
-    const vertexList = state.graph.dfsTraversalIterative(state.graph.adjacencyList[0].name);
-    console.info('Result: ', vertexList);
-    const newGraph = new Graph(state.type);
-    newGraph.linkVertexList(vertexList);
-    state.forceGraphData = parseGraph(newGraph);
+    const resultTree = state.graph.dfsTraversalIterative(state.graph.adjacencyList[0].name);
+    state.graph = resultTree;
+    state.forceGraphData = parseGraph(resultTree);
   }),
 
   onChangeGraph: actionOn(

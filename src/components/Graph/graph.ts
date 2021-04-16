@@ -82,13 +82,16 @@ export class Graph {
         return true;
     }
 
-    public dfsTraversalIterative(startVertexName: string): Array<Vertex> {
+    public dfsTraversalIterative(startVertexName: string): Graph {
+        const resultTree = new Graph(GraphType.UNDIRECTED);
         const result: Array<Vertex> = new Array<Vertex>();
         const visited: { [key: string]: boolean } = {};
         const stack: Array<string> = new Array<string>();
 
         stack.push(startVertexName);
+        let lastLength = stack.length;
 
+        /* eslint-disable */
         while(stack.length > 0) {
             const name = stack.pop();
             const currentVertex = this._adjacencyList.find((vertex) => vertex.name === name);
@@ -98,13 +101,28 @@ export class Graph {
 
                 currentVertex.edges.forEach((neighbor) => {
                     if (!visited[neighbor.name]) {
+
+                        if  (
+                          stack.length === lastLength
+                          || (stack.length > lastLength
+                          && (result.length != stack.length || stack.length === 1))
+                        ) {
+                            resultTree.addVertex(new Vertex(currentVertex.name, currentVertex.label));
+                            resultTree.addVertex(new Vertex(neighbor.name, neighbor.name));
+                            resultTree.addEdge(currentVertex.name, neighbor.name, 0);
+                        }
+
+                        lastLength = stack.length;
                         stack.push(neighbor.name);
+                    } else {
+
                     }
                 })
             }
         }
+        /* eslint-enable */
 
-        return result;
+        return resultTree;
     }
 
     public bfsTraversalIterative(startVertexName: string): Graph {
@@ -137,6 +155,7 @@ export class Graph {
                 })
             }
         }
+        /* eslint-enable */
 
         return resultTree;
     }

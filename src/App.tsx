@@ -11,9 +11,6 @@ const App = (): JSX.Element => (
         <Router history={history}>
           <div>
              <Header />
-            {/* <Switch> */}
-            {/*  <Route path="/" exact component={ForceGraph} /> */}
-            {/* </Switch> */}
             <ForceGraph />
           </div>
         </Router>

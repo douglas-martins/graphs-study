@@ -16,13 +16,10 @@ const ForceGraph = (): JSX.Element => {
     }, [graphType])
 
     return (
-        <>
-            <span>É sério isso????????????????????????????????????????</span>
-            <ForceGraph3D
-                graphData={forceGraphData} height={height - 61}
-                linkDirectionalArrowLength={arrowSize}
-            />
-        </>
+        <ForceGraph3D
+            graphData={forceGraphData} height={height - 61}
+            linkDirectionalArrowLength={arrowSize}
+        />
     );
 };
 

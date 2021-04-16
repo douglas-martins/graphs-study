@@ -13,15 +13,16 @@ import ProjectInfoModal from "@components/Modal/components/ProjectInfoModal";
 import { useModal } from "@components/Modal/customHooks/useModal";
 import { Link } from '@components/Graph/link';
 import { GraphType } from "@components/Graph/graphType";
-import { Graph } from '@components/Graph/graph';
+import { getBfsTemplate, getPrimTemplate } from '@components/Graph/templates';
 import { useStoreState, useStoreActions } from "../../store/storeHooks";
 
 import { graphIcon } from './utils';
 
 
+
 const Header = (): JSX.Element => {
     const { show, toggle, currentModal, changeCurrentModal } = useModal();
-    const graph = useStoreState((state) => state.graph);
+
     const graphType = useStoreState((state) => state.type);
     const createNewGraph = useStoreActions((actions) => actions.createNewGraph);
     const addVertex = useStoreActions((actions) => actions.addVertex);
@@ -48,9 +49,13 @@ const Header = (): JSX.Element => {
     };
 
     const samples: { [key: string]: () => void }  = {
-        bfs: () => console.log('add BFS sample'),
+        bfs () {
+            setGraph(getBfsTemplate())
+        },
         dfs: () => console.log('add DFS sample'),
-        prim: () => primSample(),
+        prim () {
+            setGraph(getPrimTemplate());
+        },
         roy: () => console.log('add Roy sample'),
     };
 
@@ -72,35 +77,6 @@ const Header = (): JSX.Element => {
         edge: (<AddEdgesModal addEdge={handleAddEdge} />),
         roy: (<RoyAlgorithmOutput />),
         about: (<ProjectInfoModal />),
-    }
-
-    const primSample: Function = (): void => {
-        const primGraph = new Graph(GraphType.UNDIRECTED);
-        primGraph.addVertex(new Vertex("A", "A"));
-        primGraph.addVertex(new Vertex("B", "B"));
-        primGraph.addVertex(new Vertex("C", "C"));
-        primGraph.addVertex(new Vertex("D", "D"));
-        primGraph.addVertex(new Vertex("E", "E"));
-        primGraph.addVertex(new Vertex("F", "F"));
-        primGraph.addVertex(new Vertex("G", "G"));
-
-        primGraph.addEdge("A", "C", 3);
-        primGraph.addEdge("A", "D", 3);
-        primGraph.addEdge("A", "B", 2);
-
-        primGraph.addEdge("B", "E", 3);
-        primGraph.addEdge("B", "C", 4);
-
-        primGraph.addEdge("D", "C", 5);
-        primGraph.addEdge("D", "F", 7);
-
-        primGraph.addEdge("F", "G", 9);
-        primGraph.addEdge("F", "C", 6);
-        primGraph.addEdge("F", "E", 8);
-
-        primGraph.addEdge("E", "C", 1);
-
-        setGraph(primGraph);
     }
 
     const renderModal: Function = (): JSX.Element | boolean => {

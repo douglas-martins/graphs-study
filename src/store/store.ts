@@ -33,16 +33,15 @@ const store = createStore<StoreModel>({
   }),
 
   runPrim: action((state, payload) => {
-    state.forceGraphData = parseGraph(state.graph.prim());
+    const resultTree = state.graph.prim();
+    state.graph = resultTree;
+    state.forceGraphData = parseGraph(resultTree);
   }),
 
   runBfs: action((state, payload) => {
-    console.info('Run BFS algorithm');
-    const vertexList = state.graph.bfsTraversalIterative(state.graph.adjacencyList[0].name);
-    console.info('Result: ', vertexList);
-    const newGraph = new Graph(state.type);
-    newGraph.linkVertexList(vertexList);
-    state.forceGraphData = parseGraph(newGraph);
+    const resultTree = state.graph.bfsTraversalIterative(state.graph.adjacencyList[0].name);
+    state.graph = resultTree;
+    state.forceGraphData = parseGraph(resultTree);
   }),
 
   runDfs: action((state, payload) => {

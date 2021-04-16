@@ -107,28 +107,38 @@ export class Graph {
         return result;
     }
 
-    public bfsTraversalIterative(startVertexName: string): Array<Vertex> {
-        const result: Array<Vertex> = new Array<Vertex>();
+    public bfsTraversalIterative(startVertexName: string): Graph {
+        const resultTree = new Graph(GraphType.UNDIRECTED);
         const visited: { [key: string]: boolean } = {};
         const queue: Array<string> = new Array<string>();
-        queue.push(startVertexName);
 
+        queue.push(startVertexName);
+        let lastLength = queue.length;
+
+        /* eslint-disable */
         while(queue.length > 0) {
             const name: string | undefined = queue.shift();
             const currentVertex = this._adjacencyList.find((v) => v.name === name);
             if (name && currentVertex && !visited[currentVertex.name]) {
                 visited[currentVertex.name] = true;
-                result.push(currentVertex);
 
                 currentVertex.edges.forEach((neighbor) => {
                     if (!visited[neighbor.name]) {
+
+                        if  (queue.length === 0 || (queue.length !== lastLength && lastLength < queue.length)) {
+                            resultTree.addVertex(new Vertex(currentVertex.name, currentVertex.label));
+                            resultTree.addVertex(new Vertex(neighbor.name, neighbor.name));
+                            resultTree.addEdge(currentVertex.name, neighbor.name, 0);
+                        }
+
+                        lastLength = queue.length;
                         queue.push(neighbor.name);
                     }
                 })
             }
         }
 
-        return result;
+        return resultTree;
     }
 
     public prim() : Graph {

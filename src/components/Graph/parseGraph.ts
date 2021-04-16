@@ -25,7 +25,7 @@ export const parseGraph = (graph: RecursiveState<Graph>): GraphData => {
       newGraphData.links.push({
         source: vertex.name,
         target: edge.name,
-        weight: edge.value.toString()
+        weight: edge.value > 0 ? edge.value.toString() : ''
       });
     }
   }

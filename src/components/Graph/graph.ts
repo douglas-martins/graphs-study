@@ -172,6 +172,21 @@ export class Graph {
         return agm;
     }
 
+    public linkVertexList(vertexList: Array<Vertex>): void {
+        /* eslint-disable no-param-reassign */
+        let lastVertex = vertexList.shift();
+        if (lastVertex) {
+            lastVertex.edges = new Array<Edge>();
+            this.addVertex(lastVertex);
+            vertexList.forEach(vertex => {
+                vertex.edges = new Array<Edge>();
+                this.addVertex(vertex);
+                this.addEdge(lastVertex?.name || '', vertex.name, 0);
+                lastVertex = vertex;
+            });
+        }
+    }
+
     private static visitedAllVertex(visitedNames: Array<string>, allNames: Array<string>): boolean {
         for (const name of allNames) {
             if (!visitedNames.includes(name)) {

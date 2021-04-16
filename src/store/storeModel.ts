@@ -14,6 +14,8 @@ interface StoreModel {
   addEdge: Action<StoreModel, Link>;
   setGraph: Action<StoreModel, Graph>;
   runPrim: Action<StoreModel, string>;
+  runBfs: Action<StoreModel, string>;
+  runDfs: Action<StoreModel, string>;
   onChangeGraph: ActionOn<StoreModel, StoreModel>;
 }
 

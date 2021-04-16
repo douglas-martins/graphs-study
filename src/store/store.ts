@@ -2,7 +2,6 @@ import { action, actionOn, createStore } from 'easy-peasy';
 import { Graph } from '@components/Graph/graph';
 import { GraphType } from '@components/Graph/graphType';
 import { GraphDataLink, GraphDataNode, parseGraph } from '@components/Graph/parseGraph';
-import { Vertex } from '@components/Graph/vertex';
 import StoreModel from './storeModel';
 
 const store = createStore<StoreModel>({
@@ -35,6 +34,24 @@ const store = createStore<StoreModel>({
 
   runPrim: action((state, payload) => {
     state.forceGraphData = parseGraph(state.graph.prim());
+  }),
+
+  runBfs: action((state, payload) => {
+    console.info('Run BFS algorithm');
+    const vertexList = state.graph.bfsTraversalIterative(state.graph.adjacencyList[0].name);
+    console.info('Result: ', vertexList);
+    const newGraph = new Graph(state.type);
+    newGraph.linkVertexList(vertexList);
+    state.forceGraphData = parseGraph(newGraph);
+  }),
+
+  runDfs: action((state, payload) => {
+    console.info('Run DFS algorithm');
+    const vertexList = state.graph.dfsTraversalIterative(state.graph.adjacencyList[0].name);
+    console.info('Result: ', vertexList);
+    const newGraph = new Graph(state.type);
+    newGraph.linkVertexList(vertexList);
+    state.forceGraphData = parseGraph(newGraph);
   }),
 
   onChangeGraph: actionOn(

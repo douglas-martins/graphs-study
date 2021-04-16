@@ -27,20 +27,20 @@ const Header = (): JSX.Element => {
     const addVertex = useStoreActions((actions) => actions.addVertex);
     const addEdge = useStoreActions((actions) => actions.addEdge);
     const runPrim = useStoreActions((actions) => actions.runPrim);
+    const runBfs = useStoreActions((actions) => actions.runBfs);
+    const runDfs = useStoreActions((actions) => actions.runDfs);
     const setGraph = useStoreActions((actions) => actions.setGraph);
 
     const algorithms: { [key: string]: () => void }  = {
         bfs () {
-            const result = graph.bfsTraversalIterative(graph.adjacencyList[0].name);
-            console.log('Run BFS algorithm');
-            console.log(result);
+            runBfs('');
         },
         dfs: () => {
-            const result = graph.dfsTraversalIterative(graph.adjacencyList[0].name);
-            console.log('Run DFS algorithm');
-            console.log(result);
+            runDfs('')
         },
-        prim: () => runPrim(''),
+        prim () {
+            runPrim('');
+        },
         roy: () => {
             console.log('Run Roy algorithm');
             changeCurrentModal({ type: 'roy', title: 'Execução do algoritmo de Roy' });

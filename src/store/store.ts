@@ -28,6 +28,10 @@ const store = createStore<StoreModel>({
     state.graph.addEdge(payload.vertexOneName, payload.vertexTwoName, payload.value);
   }),
 
+  runPrim: action((state, payload) => {
+    state.forceGraphData = parseGraph(state.graph.prim());
+  }),
+
   onChangeGraph: actionOn(
     actions => [actions.addEdge, actions.addVertex, actions.createNewGraph],
     (state, payload) => {

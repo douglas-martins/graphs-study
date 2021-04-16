@@ -22,10 +22,13 @@ const Header = (): JSX.Element => {
     const createNewGraph = useStoreActions((actions) => actions.createNewGraph);
     const addVertex = useStoreActions((actions) => actions.addVertex);
     const addEdge = useStoreActions((actions) => actions.addEdge);
+    const runPrim = useStoreActions((actions) => actions.runPrim);
+
+
     const algorithms: { [key: string]: () => void }  = {
         bfs: () => console.log('Run BFS algorithm'),
         dfs: () => console.log('Run DFS algorithm'),
-        prim: () => console.log('Run PRIM algorithm'),
+        prim: () => runPrim(''),
         roy: () => console.log('Run Roy algorithm'),
     };
 

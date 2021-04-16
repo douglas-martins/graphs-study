@@ -23,6 +23,7 @@ import { graphIcon } from './utils';
 const Header = (): JSX.Element => {
     const { show, toggle, currentModal, changeCurrentModal } = useModal();
 
+    const graph = useStoreState((state) => state.graph);
     const graphType = useStoreState((state) => state.type);
     const createNewGraph = useStoreActions((actions) => actions.createNewGraph);
     const addVertex = useStoreActions((actions) => actions.addVertex);
@@ -169,6 +170,7 @@ const Header = (): JSX.Element => {
                     variant="info"
                     className="mr-sm-3"
                     title="Selecione um algoritmo"
+                    disabled={graph.adjacencyList.length < 2}
                 >
                     {renderAlgorithmsDropdownOptions(algorithms)}
                 </DropdownButton>

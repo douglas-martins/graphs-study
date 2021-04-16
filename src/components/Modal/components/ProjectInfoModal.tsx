@@ -1,5 +1,5 @@
-import React from "react";
-import { Card, Row } from "react-bootstrap";
+import React from 'react';
+import { Card } from 'react-bootstrap';
 
 const ProjectInfoModal = (): JSX.Element => (
     <Card className="text-center">

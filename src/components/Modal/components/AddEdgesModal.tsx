@@ -1,12 +1,11 @@
-import React, { Fragment, FunctionComponent } from "react";
+import React, { Fragment, FunctionComponent } from 'react';
 import { useForm } from 'react-hook-form';
 import { Container } from 'react-bootstrap';
 
-import "bootstrap/dist/css/bootstrap.css"
+import 'bootstrap/dist/css/bootstrap.css';
 
 import FormInputError from '@components/Modal/components/FormInputError';
-import { Vertex } from "@components/Graph/vertex";
-import { useStoreState } from "../../../store/storeHooks";
+import { useStoreState } from '../../../store/storeHooks';
 
 type Inputs = {
     value: number,

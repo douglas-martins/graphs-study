@@ -17,7 +17,7 @@ export const parseGraph = (graph: RecursiveState<Graph>): GraphData => {
   for (const vertex of graph.adjacencyList) {
     newGraphData.nodes.push({
       id: vertex.name,
-      name: `${vertex.name}-name`,
+      name: `${vertex.name}-${vertex.label}`,
       value: 1,
     });
 

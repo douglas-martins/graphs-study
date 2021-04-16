@@ -9,6 +9,7 @@ import AddVertexModal from "@components/Modal/components/AddVertexModal";
 import AddEdgesModal from "@components/Modal/components/AddEdgesModal";
 import RoyAlgorithmOutput from "@components/Modal/components/RoyAlgorithmOutput";
 import SystemModal from "@components/Modal/SystemModal";
+import ProjectInfoModal from "@components/Modal/components/ProjectInfoModal";
 import { useModal } from "@components/Modal/customHooks/useModal";
 import { Link } from '@components/Graph/link';
 import { GraphType } from "@components/Graph/graphType";
@@ -53,6 +54,26 @@ const Header = (): JSX.Element => {
         roy: () => console.log('add Roy sample'),
     };
 
+    const handleAddVertex: Function = (name: string, label: string): void => {
+        const vertex = new Vertex(name, label);
+        addVertex(vertex);
+        toggle();
+    }
+
+    const handleAddEdge: Function =
+        (vertexOne: string, vertexTwo: string, value: number): void => {
+            const link = new Link(vertexOne, vertexTwo, value);
+            addEdge(link);
+            toggle();
+        }
+
+    const modals: { [key: string]: JSX.Element } = {
+        vertex: (<AddVertexModal addVertex={handleAddVertex} />),
+        edge: (<AddEdgesModal addEdge={handleAddEdge} />),
+        roy: (<RoyAlgorithmOutput />),
+        about: (<ProjectInfoModal />),
+    }
+
     const primSample: Function = (): void => {
         const primGraph = new Graph(GraphType.UNDIRECTED);
         primGraph.addVertex(new Vertex("A", "A"));
@@ -82,33 +103,18 @@ const Header = (): JSX.Element => {
         setGraph(primGraph);
     }
 
-    const handleAddVertex: Function = (name: string, label: string): void => {
-        const vertex = new Vertex(name, label);
-        addVertex(vertex);
-        toggle();
-    }
-
-    const handleAddEdge: Function =
-        (vertexOne: string, vertexTwo: string, value: number): void => {
-            const link = new Link(vertexOne, vertexTwo, value);
-            addEdge(link);
-            toggle();
-        }
-
     const renderModal: Function = (): JSX.Element | boolean => {
         if (!show) {
             return false;
         }
 
         const { type, title } = currentModal;
-        let body: JSX.Element;
-        if (type === 'roy') {
-            body = <RoyAlgorithmOutput />;
-        } else {
-            body = type === 'vertex' ?
-                <AddVertexModal addVertex={handleAddVertex} /> :
-                (<AddEdgesModal addEdge={handleAddEdge} vertexes={graph.adjacencyList} />)
+        const body: JSX.Element = modals[type];
+
+        if (!body) {
+            return false;
         }
+
         const onSave: Function = type === 'vertex' ? handleAddVertex : handleAddEdge;
         return (
             <SystemModal
@@ -155,10 +161,13 @@ const Header = (): JSX.Element => {
     return (
         <nav className="navbar navbar-light bg-dark">
             <div className="form-inline">
-                <a className="navbar-brand">
+                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+                <a className="navbar-brand" onClick={
+                    () => changeCurrentModal({ title: 'Sobre o projeto', type: 'about' })
+                }>
                     <img src={graphIcon}
                          width="100" height="35"
-                         className="d-inline-block align-top" alt=""
+                         className="d-inline-block align-top project-logo" alt=""
                     />
                     <span className="header-span">&nbsp;&nbsp;Grafos</span>
                 </a>

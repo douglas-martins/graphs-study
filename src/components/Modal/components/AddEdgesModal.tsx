@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.css"
 
 import FormInputError from '@components/Modal/components/FormInputError';
 import { Vertex } from "@components/Graph/vertex";
+import { useStoreState } from "../../../store/storeHooks";
 
 type Inputs = {
     value: number,
@@ -15,15 +16,15 @@ type Inputs = {
 
 type AddEdgeModalProps = {
     addEdge: Function;
-    vertexes: Array<Vertex>
 };
 
 
 const AddEdgeModal: FunctionComponent<AddEdgeModalProps> =
-    ({ addEdge, vertexes }): JSX.Element => {
+    ({ addEdge }): JSX.Element => {
     const {
         register, handleSubmit, formState: { errors }, watch
     } = useForm<Inputs>();
+    const graph = useStoreState((state) => state.graph);
     const watchVertexOne = watch('vertexOne');
     const watchVertexTwo = watch('vertexTwo');
     const onSubmit = (data: Inputs) => {
@@ -31,11 +32,11 @@ const AddEdgeModal: FunctionComponent<AddEdgeModalProps> =
     };
 
     const renderVertexList = (checkVertex: string): JSX.Element | JSX.Element[] => {
-        if (!vertexes || vertexes.length === 0) {
+        if (!graph.adjacencyList || graph.adjacencyList.length === 0) {
             return <option value="">Selecione um Vértice</option>
         }
         
-        const availableVertexes = vertexes.filter(({ name }) => name !== checkVertex)
+        const availableVertexes = graph.adjacencyList.filter(({ name }) => name !== checkVertex)
 
         return (
             <>

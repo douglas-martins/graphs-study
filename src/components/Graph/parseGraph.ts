@@ -2,10 +2,10 @@ import { Graph } from '@components/Graph/graph';
 import { RecursiveState } from 'easy-peasy';
 
 export type GraphDataNode = { id: string, name: string, value: number };
-export type GraphDataLink = { source: string, target: string };
+export type GraphDataLink = { source: string, target: string, weight: string };
 export type GraphData = {
   nodes: Array<GraphDataNode>,
-  links: Array<{ source: string, target: string }>
+  links: Array<GraphDataLink>
 };
 
 export const parseGraph = (graph: RecursiveState<Graph>): GraphData => {
@@ -25,6 +25,7 @@ export const parseGraph = (graph: RecursiveState<Graph>): GraphData => {
       newGraphData.links.push({
         source: vertex.name,
         target: edge.name,
+        weight: edge.value.toString()
       });
     }
   }

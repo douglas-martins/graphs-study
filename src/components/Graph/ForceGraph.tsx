@@ -19,6 +19,7 @@ const ForceGraph = (): JSX.Element => {
         <ForceGraph3D
             graphData={forceGraphData} height={height - 61}
             linkDirectionalArrowLength={arrowSize}
+            linkLabel="weight"
         />
     );
 };

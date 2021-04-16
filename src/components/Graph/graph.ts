@@ -141,6 +141,7 @@ export class Graph {
         const visitedNames = Array<string>();
         let edgesToCheck: Array<EdgeToCheck>;
         const startNode = this.adjacencyList[0];
+        const allVertexName = this.adjacencyList.map(vertex => vertex.name);
 
         agm.addVertex(new Vertex(startNode.name, startNode.label));
 
@@ -148,21 +149,37 @@ export class Graph {
         visitedNames.push(startNode.name);
         edgesToCheck = startNode.edges.map(edge => new EdgeToCheck(startNode.name, edge));
 
-        while (visited.length < this.adjacencyList.length) {
+        while (!Graph.visitedAllVertex(visitedNames, allVertexName)) {
+
             const minValueEdge : EdgeToCheck = edgesToCheck.sort((a, b) => a.edge.value - b.edge.value)[0];
             const minValueVertex : Vertex = this.adjacencyList.filter(({ name }) => name === minValueEdge.edge.name)[0];
 
-            edgesToCheck = edgesToCheck.filter(edgeToCheck => edgeToCheck !== minValueEdge).concat(minValueVertex.edges.map(edge => new EdgeToCheck(minValueVertex.name, edge)));
+            const minValueVertexEdges = minValueVertex.edges.map(edge => new EdgeToCheck(minValueVertex.name, edge));
+            edgesToCheck = edgesToCheck.filter(edgeToCheck => edgeToCheck !== minValueEdge).concat(minValueVertexEdges);
             edgesToCheck = edgesToCheck.filter(edgeToCheck => !visitedNames.includes(edgeToCheck.edge.name));
 
-            agm.addVertex(new Vertex(minValueVertex.name, minValueVertex.label));
-            agm.addEdge(minValueEdge.vertexName, minValueVertex.name, minValueEdge.edge.value);
 
-            visited.push(minValueVertex);
-            visitedNames.push(minValueVertex.name);
+            if (!visitedNames.includes(minValueEdge.edge.name)) {
+                agm.addVertex(new Vertex(minValueVertex.name, minValueVertex.label));
+                agm.addEdge(minValueEdge.vertexName, minValueVertex.name, minValueEdge.edge.value);
+
+                visitedNames.push(minValueVertex.name);
+            }
+
+            visited.push(startNode);
         }
 
         return agm;
+    }
+
+    private static visitedAllVertex(visitedNames: Array<string>, allNames: Array<string>): boolean {
+        for (const name of allNames) {
+            if (!visitedNames.includes(name)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private checkVertexExists(vertexName: string): Vertex | undefined {

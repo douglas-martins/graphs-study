@@ -11,9 +11,11 @@ import SystemModal from "@components/Modal/SystemModal";
 import { useModal } from "@components/Modal/customHooks/useModal";
 import { Link } from '@components/Graph/link';
 import { GraphType } from "@components/Graph/graphType";
+import { Graph } from '@components/Graph/graph';
 import { useStoreState, useStoreActions } from "../../store/storeHooks";
 
 import { graphIcon } from './utils';
+
 
 const Header = (): JSX.Element => {
     const { show, toggle, currentModal, changeCurrentModal } = useModal();
@@ -23,6 +25,7 @@ const Header = (): JSX.Element => {
     const addVertex = useStoreActions((actions) => actions.addVertex);
     const addEdge = useStoreActions((actions) => actions.addEdge);
     const runPrim = useStoreActions((actions) => actions.runPrim);
+    const setGraph = useStoreActions((actions) => actions.setGraph);
 
 
     const algorithms: { [key: string]: () => void }  = {
@@ -31,6 +34,42 @@ const Header = (): JSX.Element => {
         prim: () => runPrim(''),
         roy: () => console.log('Run Roy algorithm'),
     };
+
+    const samples: { [key: string]: () => void }  = {
+        bfs: () => console.log('add BFS sample'),
+        dfs: () => console.log('add DFS sample'),
+        prim: () => primSample(),
+        roy: () => console.log('add Roy sample'),
+    };
+
+    const primSample: Function = (): void => {
+        const primGraph = new Graph(GraphType.UNDIRECTED);
+        primGraph.addVertex(new Vertex("A", "A"));
+        primGraph.addVertex(new Vertex("B", "B"));
+        primGraph.addVertex(new Vertex("C", "C"));
+        primGraph.addVertex(new Vertex("D", "D"));
+        primGraph.addVertex(new Vertex("E", "E"));
+        primGraph.addVertex(new Vertex("F", "F"));
+        primGraph.addVertex(new Vertex("G", "G"));
+
+        primGraph.addEdge("A", "C", 3);
+        primGraph.addEdge("A", "D", 3);
+        primGraph.addEdge("A", "B", 2);
+
+        primGraph.addEdge("B", "E", 3);
+        primGraph.addEdge("B", "C", 4);
+
+        primGraph.addEdge("D", "C", 5);
+        primGraph.addEdge("D", "F", 7);
+
+        primGraph.addEdge("F", "G", 9);
+        primGraph.addEdge("F", "C", 6);
+        primGraph.addEdge("F", "E", 8);
+
+        primGraph.addEdge("E", "C", 1);
+
+        setGraph(primGraph);
+    }
 
     const handleAddVertex: Function = (name: string, label: string): void => {
         const vertex = new Vertex(name, label);
@@ -85,6 +124,19 @@ const Header = (): JSX.Element => {
                 </Dropdown.Item>
             )));
 
+    const renderSampleAlgorithmsDropdownOptions = (): JSX.Element[] =>
+      (['BFS', 'DFS', 'PRIM', 'Roy'].map((algorithm, index) => (
+        <Dropdown.Item key={algorithm} eventKey={index.toString()}
+                       onClick={() => {
+                           if (samples[algorithm.toLowerCase()]) {
+                               samples[algorithm.toLowerCase()]();
+                           }
+                       }}
+        >
+            {algorithm}
+        </Dropdown.Item>
+      )));
+
     const getToggleLabel = (): string =>
         graphType === 1 ? 'Não Direcionado' : 'Direcionado';
 
@@ -120,6 +172,15 @@ const Header = (): JSX.Element => {
                     title="Selecione um algoritmo"
                 >
                     {renderRunAlgorithmsDropdownOptions()}
+                </DropdownButton>
+                <DropdownButton
+                  as={ButtonGroup}
+                  id="dropdown-variants-Info"
+                  variant="info"
+                  className="mr-sm-3"
+                  title="Templates"
+                >
+                    {renderSampleAlgorithmsDropdownOptions()}
                 </DropdownButton>
                 <Form>
                     <Form.Check

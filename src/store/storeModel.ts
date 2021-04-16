@@ -12,6 +12,7 @@ interface StoreModel {
   forceGraphData: GraphData
   addVertex: Action<StoreModel, Vertex>;
   addEdge: Action<StoreModel, Link>;
+  setGraph: Action<StoreModel, Graph>;
   runPrim: Action<StoreModel, string>;
   onChangeGraph: ActionOn<StoreModel, StoreModel>;
 }

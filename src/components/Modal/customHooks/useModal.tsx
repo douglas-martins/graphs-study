@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export type ModalTypeData = {
-    type: 'vertex' | 'edge' | 'algorithms' | '';
+    type: 'vertex' | 'edge' | 'roy' | '';
     title: string;
 };
 

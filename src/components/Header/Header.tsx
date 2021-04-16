@@ -7,6 +7,7 @@ import './Header.css';
 import { Vertex } from "@components/Graph/vertex";
 import AddVertexModal from "@components/Modal/components/AddVertexModal";
 import AddEdgesModal from "@components/Modal/components/AddEdgesModal";
+import RoyAlgorithmOutput from "@components/Modal/components/RoyAlgorithmOutput";
 import SystemModal from "@components/Modal/SystemModal";
 import { useModal } from "@components/Modal/customHooks/useModal";
 import { Link } from '@components/Graph/link';
@@ -27,12 +28,22 @@ const Header = (): JSX.Element => {
     const runPrim = useStoreActions((actions) => actions.runPrim);
     const setGraph = useStoreActions((actions) => actions.setGraph);
 
-
     const algorithms: { [key: string]: () => void }  = {
-        bfs: () => console.log('Run BFS algorithm'),
-        dfs: () => console.log('Run DFS algorithm'),
+        bfs () {
+            const result = graph.bfsTraversalIterative(graph.adjacencyList[0].name);
+            console.log('Run BFS algorithm');
+            console.log(result);
+        },
+        dfs: () => {
+            const result = graph.dfsTraversalIterative(graph.adjacencyList[0].name);
+            console.log('Run DFS algorithm');
+            console.log(result);
+        },
         prim: () => runPrim(''),
-        roy: () => console.log('Run Roy algorithm'),
+        roy: () => {
+            console.log('Run Roy algorithm');
+            changeCurrentModal({ type: 'roy', title: 'Execução do algoritmo de Roy' });
+        },
     };
 
     const samples: { [key: string]: () => void }  = {
@@ -90,9 +101,14 @@ const Header = (): JSX.Element => {
         }
 
         const { type, title } = currentModal;
-        const body: JSX.Element = type === 'vertex' ?
-            <AddVertexModal addVertex={handleAddVertex} /> :
-            (<AddEdgesModal addEdge={handleAddEdge} vertexes={graph.adjacencyList} />);
+        let body: JSX.Element;
+        if (type === 'roy') {
+            body = <RoyAlgorithmOutput />;
+        } else {
+            body = type === 'vertex' ?
+                <AddVertexModal addVertex={handleAddVertex} /> :
+                (<AddEdgesModal addEdge={handleAddEdge} vertexes={graph.adjacencyList} />)
+        }
         const onSave: Function = type === 'vertex' ? handleAddVertex : handleAddEdge;
         return (
             <SystemModal
@@ -110,32 +126,28 @@ const Header = (): JSX.Element => {
         const newType: GraphType = graphType === 0 ? 1 : 0;
         createNewGraph(newType);
     };
-    
-    const renderRunAlgorithmsDropdownOptions = (): JSX.Element[] =>
-        (['BFS', 'DFS', 'PRIM', 'Roy'].map((algorithm, index) => (
-                <Dropdown.Item key={algorithm} eventKey={index.toString()}
-                    onClick={() => {
-                        if (algorithms[algorithm.toLowerCase()]) {
-                            algorithms[algorithm.toLowerCase()]();
-                        }
-                    }}
-                >
-                    {algorithm}
-                </Dropdown.Item>
-            )));
 
-    const renderSampleAlgorithmsDropdownOptions = (): JSX.Element[] =>
-      (['BFS', 'DFS', 'PRIM', 'Roy'].map((algorithm, index) => (
-        <Dropdown.Item key={algorithm} eventKey={index.toString()}
-                       onClick={() => {
-                           if (samples[algorithm.toLowerCase()]) {
-                               samples[algorithm.toLowerCase()]();
-                           }
-                       }}
-        >
-            {algorithm}
-        </Dropdown.Item>
-      )));
+    const renderAlgorithmsDropdownOptions =
+        (mappedValues: { [key: string]: () => void }): JSX.Element[] => {
+        const elements = ['BFS', 'DFS']
+        if (graphType === GraphType.DIRECTED) {
+            elements.push('Roy');
+        } else {
+            elements.push('PRIM');
+        }
+
+        return elements.map((algorithm, index) => (
+            <Dropdown.Item key={algorithm} eventKey={index.toString()}
+               onClick={() => {
+                   if (mappedValues[algorithm.toLowerCase()]) {
+                       mappedValues[algorithm.toLowerCase()]();
+                   }
+               }}
+            >
+                {algorithm}
+            </Dropdown.Item>
+        ));
+    }
 
     const getToggleLabel = (): string =>
         graphType === 1 ? 'Não Direcionado' : 'Direcionado';
@@ -171,7 +183,7 @@ const Header = (): JSX.Element => {
                     className="mr-sm-3"
                     title="Selecione um algoritmo"
                 >
-                    {renderRunAlgorithmsDropdownOptions()}
+                    {renderAlgorithmsDropdownOptions(algorithms)}
                 </DropdownButton>
                 <DropdownButton
                   as={ButtonGroup}
@@ -180,7 +192,7 @@ const Header = (): JSX.Element => {
                   className="mr-sm-3"
                   title="Templates"
                 >
-                    {renderSampleAlgorithmsDropdownOptions()}
+                    {renderAlgorithmsDropdownOptions(samples)}
                 </DropdownButton>
                 <Form>
                     <Form.Check

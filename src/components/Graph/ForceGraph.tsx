@@ -14,7 +14,7 @@ const ForceGraph = (): JSX.Element => {
     useEffect(() => {
         setArrowSize(graphType === GraphType.DIRECTED ? 3.5 : 0);
     }, [graphType])
-    
+
     return (
         <ForceGraph3D
             graphData={forceGraphData} height={height - 61}

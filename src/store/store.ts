@@ -28,6 +28,14 @@ const store = createStore<StoreModel>({
     state.graph.addEdge(payload.vertexOneName, payload.vertexTwoName, payload.value);
   }),
 
+  deleteEdge: action((state, payload) => {
+    state.graph.removeEdge(payload.vertexOneName, payload.vertexTwoName);
+  }),
+
+  deleteVertex: action((state, payload) => {
+    state.graph.removeVertex(payload);
+  }),
+
   setGraph: action((state, payload) => {
     state.graph = payload;
   }),
@@ -51,7 +59,7 @@ const store = createStore<StoreModel>({
   }),
 
   onChangeGraph: actionOn(
-    actions => [actions.addEdge, actions.addVertex, actions.createNewGraph, actions.setGraph],
+    actions => [actions.addEdge, actions.addVertex, actions.createNewGraph, actions.setGraph, actions.deleteEdge, actions.deleteVertex],
     (state, payload) => {
       state.forceGraphData = parseGraph(state.graph);
     }

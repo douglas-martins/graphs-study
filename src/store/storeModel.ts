@@ -11,7 +11,9 @@ interface StoreModel {
   createNewGraph: Action<StoreModel, GraphType>;
   forceGraphData: GraphData
   addVertex: Action<StoreModel, Vertex>;
+  deleteVertex: Action<StoreModel, string>;
   addEdge: Action<StoreModel, Link>;
+  deleteEdge: Action<StoreModel, Link>;
   setGraph: Action<StoreModel, Graph>;
   runPrim: Action<StoreModel, string>;
   runBfs: Action<StoreModel, string>;

@@ -1,5 +1,5 @@
 import React from "react";
-import { ButtonGroup, DropdownButton, Form, Dropdown } from "react-bootstrap";
+import { ButtonGroup, Dropdown, DropdownButton, Form } from "react-bootstrap";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import './Header.css';
@@ -7,14 +7,16 @@ import './Header.css';
 import { Vertex } from "@components/Graph/vertex";
 import AddVertexModal from "@components/Modal/components/AddVertexModal";
 import AddEdgesModal from "@components/Modal/components/AddEdgesModal";
-import RoyAlgorithmOutput from "@components/Modal/components/RoyAlgorithmOutput";
+import RoyAlgorithmOutput
+    from "@components/Modal/components/RoyAlgorithmOutput";
 import SystemModal from "@components/Modal/SystemModal";
 import ProjectInfoModal from "@components/Modal/components/ProjectInfoModal";
 import { useModal } from "@components/Modal/customHooks/useModal";
 import { Link } from '@components/Graph/link';
 import { GraphType } from "@components/Graph/graphType";
 import { getBfsDfsTemplate, getPrimTemplate } from '@components/Graph/templates';
-import { useStoreState, useStoreActions } from "../../store/storeHooks";
+import { Graph } from "@components/Graph/graph";
+import { useStoreActions, useStoreState } from "../../store/storeHooks";
 
 import { graphIcon } from './utils';
 
@@ -43,10 +45,10 @@ const Header = (): JSX.Element => {
         prim () {
             runPrim('');
         },
-        roy: () => {
-            console.log('Run Roy algorithm');
-            changeCurrentModal({ type: 'roy', title: 'Execução do algoritmo de Roy' });
-        },
+        // roy: () => {
+        //     console.log('Run Roy algorithm');
+        //     changeCurrentModal({ type: 'roy', title: 'Execução do algoritmo de Roy' });
+        // },
     };
 
     const samples: { [key: string]: () => void }  = {
@@ -59,7 +61,7 @@ const Header = (): JSX.Element => {
         prim () {
             setGraph(getPrimTemplate());
         },
-        roy: () => console.log('add Roy sample'),
+        // roy: () => royExample(),
     };
 
     const handleAddVertex: Function = (name: string, label: string): void => {
@@ -78,8 +80,28 @@ const Header = (): JSX.Element => {
     const modals: { [key: string]: JSX.Element } = {
         vertex: (<AddVertexModal addVertex={handleAddVertex} />),
         edge: (<AddEdgesModal addEdge={handleAddEdge} />),
-        roy: (<RoyAlgorithmOutput />),
+        // roy: (<RoyAlgorithmOutput />),
         about: (<ProjectInfoModal />),
+    }
+
+    const royExample = (): void => {
+        const royGraph = new Graph(GraphType.DIRECTED);
+        for (let i = 1; i <= 6; i++) {
+            royGraph.addVertex(new Vertex(i.toString(), i.toString()));
+        }
+
+        royGraph.addEdge('1', '2', 1);
+        royGraph.addEdge('2', '4', 1);
+        royGraph.addEdge('3', '2', 1);
+        royGraph.addEdge('3', '5', 1);
+        royGraph.addEdge('4', '1', 1);
+        royGraph.addEdge('4', '6', 1);
+        royGraph.addEdge('5', '4', 1);
+        royGraph.addEdge('5', '2', 1);
+        royGraph.addEdge('5', '1', 1);
+        royGraph.addEdge('6', '5', 1);
+
+        setGraph(royGraph);
     }
 
     const renderModal: Function = (): JSX.Element | boolean => {

@@ -6,13 +6,13 @@ const RoyAlgorithmOutput = (): JSX.Element => {
     const [output, setOutput] = useState<string>('');
 
     useEffect(() => {
-        const { distances, nextVertices } = graph.roy();
-        console.log(JSON.stringify(distances));
-        console.log(JSON.stringify(nextVertices));
-        setOutput(`${JSON.stringify(distances)}
-        
-        ${JSON.stringify(nextVertices)}
-        `)
+        // graph.roy();
+        // console.log(JSON.stringify(distances));
+        // console.log(JSON.stringify(nextVertices));
+        // setOutput(`${JSON.stringify(distances)}
+        //
+        // ${JSON.stringify(nextVertices)}
+        // `)
     }, [])
 
     return <div>{output}</div>

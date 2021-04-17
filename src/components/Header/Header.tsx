@@ -7,8 +7,6 @@ import './Header.css';
 import { Vertex } from "@components/Graph/vertex";
 import AddVertexModal from "@components/Modal/components/AddVertexModal";
 import AddEdgesModal from "@components/Modal/components/AddEdgesModal";
-import RoyAlgorithmOutput
-    from "@components/Modal/components/RoyAlgorithmOutput";
 import SystemModal from "@components/Modal/SystemModal";
 import ProjectInfoModal from "@components/Modal/components/ProjectInfoModal";
 import { useModal } from "@components/Modal/customHooks/useModal";

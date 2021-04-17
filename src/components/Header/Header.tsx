@@ -15,6 +15,7 @@ import { useModal } from "@components/Modal/customHooks/useModal";
 import { Link } from '@components/Graph/link';
 import { GraphType } from "@components/Graph/graphType";
 import { getBfsDfsTemplate, getPrimTemplate } from '@components/Graph/templates';
+import { Graph } from "@components/Graph/graph";
 import { useStoreActions, useStoreState } from "../../store/storeHooks";
 
 import { graphIcon } from './utils';

@@ -1,5 +1,7 @@
 import { Edge } from '@components/Graph/edge';
 
+export type Location = { latitude: Number, longitude: Number }
+
 export class Vertex {
 
     private _name: string;
@@ -8,10 +10,13 @@ export class Vertex {
 
     private _edges: Array<Edge>;
 
-    constructor(vertexName: string, vertexLabel: string) {
+    private _mapLocation: Location;
+
+    constructor(vertexName: string, vertexLabel: string, mapLocation: Location | null = null) {
         this._name = vertexName;
         this._label = vertexLabel;
         this._edges = new Array<Edge>();
+        this._mapLocation = mapLocation || { latitude: 0, longitude: 0 };
     }
 
     public get name(): string {

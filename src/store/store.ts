@@ -52,6 +52,12 @@ const store = createStore<StoreModel>({
     state.forceGraphData = parseGraph(resultTree);
   }),
 
+  runWelshPowell: action((state, payload) => {
+    const resultGraph = state.graph.welshPowell();
+    state.graph = resultGraph;
+    state.forceGraphData = parseGraph(resultGraph);
+  }),
+
   runDfs: action((state, payload) => {
     const resultTree = state.graph.dfsTraversalIterative(state.graph.adjacencyList[0].name);
     state.graph = resultTree;

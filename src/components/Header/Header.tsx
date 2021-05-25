@@ -12,7 +12,7 @@ import ProjectInfoModal from "@components/Modal/components/ProjectInfoModal";
 import { useModal } from "@components/Modal/customHooks/useModal";
 import { Link } from '@components/Graph/link';
 import { GraphType } from "@components/Graph/graphType";
-import { getBfsDfsTemplate, getPrimTemplate } from '@components/Graph/templates';
+import { getBfsDfsTemplate, getPrimTemplate, getWelshPowellTemplate } from '@components/Graph/templates';
 import { Graph } from "@components/Graph/graph";
 import { useStoreActions, useStoreState } from "../../store/storeHooks";
 
@@ -29,6 +29,7 @@ const Header = (): JSX.Element => {
     const addVertex = useStoreActions((actions) => actions.addVertex);
     const addEdge = useStoreActions((actions) => actions.addEdge);
     const runPrim = useStoreActions((actions) => actions.runPrim);
+    const runWelshPowell = useStoreActions((actions) => actions.runWelshPowell);
     const runBfs = useStoreActions((actions) => actions.runBfs);
     const runDfs = useStoreActions((actions) => actions.runDfs);
     const setGraph = useStoreActions((actions) => actions.setGraph);
@@ -43,6 +44,9 @@ const Header = (): JSX.Element => {
         prim () {
             runPrim('');
         },
+        welshPowell: () => {
+            runWelshPowell('');
+        }
         // roy: () => {
         //     console.log('Run Roy algorithm');
         //     changeCurrentModal({ type: 'roy', title: 'Execução do algoritmo de Roy' });
@@ -59,6 +63,9 @@ const Header = (): JSX.Element => {
         prim () {
             setGraph(getPrimTemplate());
         },
+        welshPowell: () => {
+            setGraph(getWelshPowellTemplate(graphType));
+        }
         // roy: () => royExample(),
     };
 

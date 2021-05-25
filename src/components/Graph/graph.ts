@@ -202,19 +202,53 @@ export class Graph {
         return agm;
     }
 
-    public linkVertexList(vertexList: Array<Vertex>): void {
-        /* eslint-disable no-param-reassign */
-        let lastVertex = vertexList.shift();
-        if (lastVertex) {
-            lastVertex.edges = new Array<Edge>();
-            this.addVertex(lastVertex);
-            vertexList.forEach(vertex => {
-                vertex.edges = new Array<Edge>();
-                this.addVertex(vertex);
-                this.addEdge(lastVertex?.name || '', vertex.name, 0);
-                lastVertex = vertex;
-            });
+    public welshPowell() : Graph {
+        const welshPowellGraph = new Graph(this.type);
+        let vertexCopy =  [...welshPowellGraph.adjacencyList];
+        const coloredVertex = new Array<{ vertex: Vertex, color: number }>();
+        welshPowellGraph.adjacencyList.sort((a, b) => {
+            if (a.edges.length > b.edges.length) {
+                return 1;
+            }
+
+            if (a.edges.length < b.edges.length) {
+                return -1;
+            }
+
+            return 0;
+        });
+
+        let color = 1;
+        let currentVertex = welshPowellGraph.adjacencyList[0];
+        coloredVertex.push({ vertex: currentVertex, color });
+
+        while(vertexCopy.length > 0) {
+            const vertex: Vertex | undefined = vertexCopy.shift();
+
+            if (vertex) {
+                const vertexNotConnected = currentVertex.edges
+                  .filter(({ name }) => name !== vertex.name)
+                  .map(({ name }) => welshPowellGraph.adjacencyList.find(({ name: vertexName }) => vertexName === name))
+                  .filter(Boolean);
+
+                if (Array.isArray(vertexNotConnected) && vertexNotConnected.length > 0) {
+                    // Colored if not connect with currentVertex
+                    for (const addVertex of vertexNotConnected) {
+                        if (addVertex) {
+                            coloredVertex.push({ vertex: addVertex, color });
+                            vertexCopy = vertexCopy.filter((v) => v.name !== addVertex.name);
+                        }
+                    }
+                }
+            }
+            color += 1;
+            if (vertex) {
+                currentVertex = vertex;
+            }
         }
+
+
+        return welshPowellGraph;
     }
 
     private static visitedAllVertex(visitedNames: Array<string>, allNames: Array<string>): boolean {
@@ -235,33 +269,5 @@ export class Graph {
         }
 
         return hasVertex;
-    }
-
-    private getTranspose(): Graph {
-        const transposeGraph = new Graph(this.type);
-
-        this.adjacencyList.forEach(({ name, label }) => {
-            transposeGraph.addVertex(new Vertex(name, label));
-        });
-
-
-        for (let i = 0; i < this.adjacencyList.length; i++) {
-            const currentVertex: Vertex = this.adjacencyList[i];
-            this.adjacencyList[i].edges.forEach((edge) => {
-               const nextVertexEdge = transposeGraph.adjacencyList.find(({ name }) => name === edge.name);
-               if (nextVertexEdge) {
-                   transposeGraph.addEdge(nextVertexEdge.name, currentVertex.name, edge.value);
-               }
-            });
-        }
-        return transposeGraph;
-    }
-
-    // eslint-disable-next-line class-methods-use-this
-    private findEdge(startVertex: Vertex, endVertex: Vertex): Edge | undefined {
-        const startHasEdge = startVertex.edges.find(({ name }) => name === endVertex.name);
-        const endHasEdge = endVertex.edges.find(({ name }) => name === startVertex.name)
-
-        return startHasEdge || endHasEdge;
     }
 }

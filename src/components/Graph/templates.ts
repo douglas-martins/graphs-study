@@ -126,7 +126,7 @@ export function getWelshPowellTemplate(type: GraphType): Graph {
   );
   welshPowellGraph.addVertex(
     new Vertex("Curitiba",
-      "Umuarama",
+      "Curitiba",
       { latitude: -25.4284, longitude: -49.2733 }
     )
   );
@@ -146,5 +146,5 @@ export function getWelshPowellTemplate(type: GraphType): Graph {
   welshPowellGraph.addEdge("Maringá", "Umuarama", 190);
   welshPowellGraph.addEdge("Umuarama", "Toledo", 126);
 
-  return welshPowellGraph
+  return welshPowellGraph;
 }

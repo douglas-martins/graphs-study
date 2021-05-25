@@ -53,7 +53,7 @@ const store = createStore<StoreModel>({
   }),
 
   runWelshPowell: action((state, payload) => {
-    const resultGraph = state.graph.welshPowell();
+    const resultGraph = state.graph.welshPowell(state.graph as Graph);
     state.graph = resultGraph;
     state.forceGraphData = parseGraph(resultGraph);
   }),

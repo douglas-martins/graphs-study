@@ -1,3 +1,4 @@
+import { orderBy } from 'lodash'
 import { Vertex } from '@components/Graph/vertex';
 import { Edge } from '@components/Graph/edge';
 import { GraphType } from '@components/Graph/graphType';
@@ -8,8 +9,11 @@ export class Graph {
 
     private readonly type: GraphType;
 
+    private _chromaticNumber: number;
+
     constructor(graphType: GraphType) {
         this._adjacencyList = new Array<Vertex>();
+        this._chromaticNumber = 0;
         this.type = graphType;
     }
 
@@ -19,6 +23,14 @@ export class Graph {
 
     public set adjacencyList(newAdjacencyList: Array<Vertex>) {
         this._adjacencyList = newAdjacencyList;
+    }
+
+    public get chromaticNumber(): number {
+        return this.chromaticNumber;
+    }
+
+    public set chromaticNumber(chromaticNumber: number) {
+        this._chromaticNumber = chromaticNumber;
     }
 
     public addVertex(newVertex: Vertex): boolean {
@@ -202,41 +214,43 @@ export class Graph {
         return agm;
     }
 
-    public welshPowell() : Graph {
-        const welshPowellGraph = new Graph(this.type);
-        let vertexCopy =  [...welshPowellGraph.adjacencyList];
-        const coloredVertex = new Array<{ vertex: Vertex, color: number }>();
-        welshPowellGraph.adjacencyList.sort((a, b) => {
-            if (a.edges.length > b.edges.length) {
-                return 1;
-            }
-
-            if (a.edges.length < b.edges.length) {
-                return -1;
-            }
-
-            return 0;
-        });
-
+    // eslint-disable-next-line class-methods-use-this
+    public welshPowell(currentGraph: Graph) : Graph {
+        const welshPowellGraph = new Graph(currentGraph.type);
+        let vertexCopy = orderBy(
+          currentGraph.adjacencyList,
+          (vertex) => vertex.edges.length, 'desc'
+        );
+        const coloredVertex = new Array<Vertex>();
         let color = 1;
-        let currentVertex = welshPowellGraph.adjacencyList[0];
-        coloredVertex.push({ vertex: currentVertex, color });
+        let currentVertex = vertexCopy.shift();
+
+        if (currentVertex) {
+            currentVertex.color = color
+            coloredVertex.push(currentVertex);
+        }
 
         while(vertexCopy.length > 0) {
             const vertex: Vertex | undefined = vertexCopy.shift();
 
-            if (vertex) {
+            if (vertex && currentVertex) {
+                vertex.color = color;
+                coloredVertex.push(vertex);
                 const vertexNotConnected = currentVertex.edges
                   .filter(({ name }) => name !== vertex.name)
-                  .map(({ name }) => welshPowellGraph.adjacencyList.find(({ name: vertexName }) => vertexName === name))
+                  .map(({ name }) => currentGraph.adjacencyList.find(({ name: vertexName }) => vertexName === name))
                   .filter(Boolean);
 
                 if (Array.isArray(vertexNotConnected) && vertexNotConnected.length > 0) {
                     // Colored if not connect with currentVertex
                     for (const addVertex of vertexNotConnected) {
                         if (addVertex) {
-                            coloredVertex.push({ vertex: addVertex, color });
-                            vertexCopy = vertexCopy.filter((v) => v.name !== addVertex.name);
+                            const hasVertex = coloredVertex.find(({ name }) => name === addVertex.name);
+                            if (!hasVertex) {
+                                addVertex.color = color;
+                                coloredVertex.push(addVertex);
+                                vertexCopy = vertexCopy.filter((v) => v.name !== addVertex.name);
+                            }
                         }
                     }
                 }
@@ -247,7 +261,8 @@ export class Graph {
             }
         }
 
-
+        welshPowellGraph.adjacencyList = coloredVertex;
+        welshPowellGraph.chromaticNumber = color - 1;
         return welshPowellGraph;
     }
 

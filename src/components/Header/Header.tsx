@@ -44,7 +44,7 @@ const Header = (): JSX.Element => {
         prim () {
             runPrim('');
         },
-        welshPowell: () => {
+        'welsh powell': () => {
             runWelshPowell('');
         }
         // roy: () => {
@@ -63,7 +63,7 @@ const Header = (): JSX.Element => {
         prim () {
             setGraph(getPrimTemplate());
         },
-        welshPowell: () => {
+        'welsh powell': () => {
             setGraph(getWelshPowellTemplate(graphType));
         }
         // roy: () => royExample(),
@@ -147,6 +147,7 @@ const Header = (): JSX.Element => {
         } else {
             elements.push('PRIM');
         }
+        elements.push('Welsh Powell');
 
         return elements.map((algorithm, index) => (
             <Dropdown.Item key={algorithm} eventKey={index.toString()}

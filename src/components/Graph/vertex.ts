@@ -12,11 +12,14 @@ export class Vertex {
 
     private _mapLocation: Location;
 
+    private _color: number;
+
     constructor(vertexName: string, vertexLabel: string, mapLocation: Location | null = null) {
         this._name = vertexName;
         this._label = vertexLabel;
         this._edges = new Array<Edge>();
         this._mapLocation = mapLocation || { latitude: 0, longitude: 0 };
+        this._color = -1;
     }
 
     public get name(): string {
@@ -41,5 +44,13 @@ export class Vertex {
 
     public set label(value: string) {
         this._label = value;
+    }
+
+    public set color(color: number) {
+        this._color = color;
+    }
+
+    public get color(): number {
+        return this._color;
     }
 }

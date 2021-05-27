@@ -280,7 +280,6 @@ export class Graph {
         while (currentVertex.name !== endVertex.name) {
             visitedVertexNames.push(currentVertex.name);
 
-
             const neighbors = this.getVertexNeighbors(currentVertex, visitedVertexNames);
 
             if (neighbors.length === 0) throw new Error(`${currentVertex.name} hasn't neighbors`);

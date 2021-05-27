@@ -12,7 +12,12 @@ import ProjectInfoModal from "@components/Modal/components/ProjectInfoModal";
 import { useModal } from "@components/Modal/customHooks/useModal";
 import { Link } from '@components/Graph/link';
 import { GraphType } from "@components/Graph/graphType";
-import { getBfsDfsTemplate, getPrimTemplate, getWelshPowellTemplate } from '@components/Graph/templates';
+import {
+    getAStartTemplate,
+    getBfsDfsTemplate,
+    getPrimTemplate,
+    getWelshPowellTemplate,
+} from '@components/Graph/templates';
 import { Graph } from "@components/Graph/graph";
 import { useStoreActions, useStoreState } from "../../store/storeHooks";
 
@@ -32,6 +37,7 @@ const Header = (): JSX.Element => {
     const runWelshPowell = useStoreActions((actions) => actions.runWelshPowell);
     const runBfs = useStoreActions((actions) => actions.runBfs);
     const runDfs = useStoreActions((actions) => actions.runDfs);
+    const runAStar = useStoreActions((actions) => actions.runAStar);
     const setGraph = useStoreActions((actions) => actions.setGraph);
 
     const algorithms: { [key: string]: () => void }  = {
@@ -46,11 +52,10 @@ const Header = (): JSX.Element => {
         },
         'welsh powell': () => {
             runWelshPowell('');
+        },
+        astar () {
+            runAStar('');
         }
-        // roy: () => {
-        //     console.log('Run Roy algorithm');
-        //     changeCurrentModal({ type: 'roy', title: 'Execução do algoritmo de Roy' });
-        // },
     };
 
     const samples: { [key: string]: () => void }  = {
@@ -65,8 +70,10 @@ const Header = (): JSX.Element => {
         },
         'welsh powell': () => {
             setGraph(getWelshPowellTemplate(graphType));
+        },
+        astar() {
+            setGraph(getAStartTemplate(graphType));
         }
-        // roy: () => royExample(),
     };
 
     const handleAddVertex: Function = (name: string, label: string): void => {
@@ -148,6 +155,7 @@ const Header = (): JSX.Element => {
             elements.push('PRIM');
         }
         elements.push('Welsh Powell');
+        elements.push('aStar');
 
         return elements.map((algorithm, index) => (
             <Dropdown.Item key={algorithm} eventKey={index.toString()}

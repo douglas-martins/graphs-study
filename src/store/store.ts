@@ -64,6 +64,11 @@ const store = createStore<StoreModel>({
     state.forceGraphData = parseGraph(resultTree);
   }),
 
+  runAStar: action((state, payload) => {
+    // O usuário escolher isso
+    state.graph.aStar(state.graph.adjacencyList[0], state.graph.adjacencyList[state.graph.adjacencyList.length - 1]);
+  }),
+
   onChangeGraph: actionOn(
     actions => [actions.addEdge, actions.addVertex, actions.createNewGraph, actions.setGraph, actions.deleteEdge, actions.deleteVertex],
     (state, payload) => {

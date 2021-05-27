@@ -19,6 +19,7 @@ interface StoreModel {
   runWelshPowell: Action<StoreModel, string>;
   runBfs: Action<StoreModel, string>;
   runDfs: Action<StoreModel, string>;
+  runAStar: Action<StoreModel, string>;
   onChangeGraph: ActionOn<StoreModel, StoreModel>;
 }
 

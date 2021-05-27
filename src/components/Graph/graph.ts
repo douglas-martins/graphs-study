@@ -3,6 +3,9 @@ import { Vertex } from '@components/Graph/vertex';
 import { Edge } from '@components/Graph/edge';
 import { GraphType } from '@components/Graph/graphType';
 import { EdgeToCheck } from '@components/Graph/prim/EdgeToCheck';
+import { HItem } from '@components/Graph/HItem';
+
+export type HResult = { vertex: Vertex, value: number };
 
 export class Graph {
     private _adjacencyList: Array<Vertex>;
@@ -264,6 +267,103 @@ export class Graph {
         welshPowellGraph.adjacencyList = coloredVertex;
         welshPowellGraph.chromaticNumber = color - 1;
         return welshPowellGraph;
+    }
+
+    public aStar(startVertex: Vertex, endVertex: Vertex) {
+        const result = new Array<Vertex>();
+        let currentVertex = startVertex;
+        let hList = new Array<HItem>();
+        const visitedVertexNames = new Array<string>();
+
+        let control = 0;
+
+        while (currentVertex.name !== endVertex.name) {
+            visitedVertexNames.push(currentVertex.name);
+            hList = this.calculateH(currentVertex);
+
+            const neighbors = this.getVertexNeighbors(currentVertex, visitedVertexNames);
+
+            if (neighbors.length === 0) throw new Error("No neighbors");
+            const bestNeighbor = Graph.findBestNeighbor(currentVertex, neighbors, hList);
+
+            result.push(bestNeighbor);
+            currentVertex = bestNeighbor;
+            control += 1;
+
+        }
+
+        console.log(result);
+
+    }
+
+    private calculateH(startVertex: Vertex): Array<HItem> {
+        const hList = new Array<HItem>();
+
+        this.adjacencyList.forEach((vertex) => {
+            if (vertex.name === startVertex.name) {
+                hList.push(new HItem(startVertex.name, 0));
+            } else {
+                const distance = Graph.calcDistance(
+                  startVertex.mapLocation.latitude,
+                  startVertex.mapLocation.longitude,
+                  vertex.mapLocation.latitude,
+                  vertex.mapLocation.longitude
+                );
+                hList.push(new HItem(vertex.name, distance));
+            }
+        })
+
+        return hList;
+    }
+
+    private static calcDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+        const distanceLat = Graph.toRad(lat2 - lat1);
+        const distanceLong = Graph.toRad(lon2 - lon1);
+        const lat1Rad = Graph.toRad(lat1);
+        const lat2Rad = Graph.toRad(lat2);
+
+        const a = Math.sin(distanceLat / 2) * Math.sin(distanceLat / 2)
+                    + Math.sin(distanceLong/2) * Math.sin(distanceLong/2)
+                    * Math.cos(lat1Rad) * Math.cos(lat2Rad);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return 6371 * c;
+    }
+
+
+    private static toRad(value: number): number {
+        return value * Math.PI / 180;
+    }
+
+    private getVertexNeighbors(startVertex: Vertex, visitedVertexNames : Array<string>): Array<Vertex> {
+        const { edges } = startVertex;
+        const neighbors =  new Array<Vertex>();
+        edges.forEach(edge => {
+            const item = this.adjacencyList.find(vertex => vertex.name === edge.name);
+            if (item !== undefined && !visitedVertexNames.includes(item.name)) {
+                neighbors.push(item);
+            }
+        });
+        return neighbors;
+    }
+
+    private static findBestNeighbor(startVertex: Vertex, neighbors: Array<Vertex>, hList: Array<HItem>): Vertex {
+        const result = new Array<HResult>();
+        neighbors.forEach(neighbor => {
+            const edge = startVertex.edges.find(item => item.name === neighbor.name);
+            if (edge != undefined) {
+                const hValue = hList.find(item => item.vertexName === neighbor.name);
+                if (hValue != undefined) {
+                    const f = edge.value + hValue.value;
+                    result.push({ vertex: neighbor, value: f })
+                }
+            } else {
+                throw new Error("This node not have this neighbor");
+            }
+        });
+
+        result.sort((a, b) => a.value - b.value);
+
+        return result[0].vertex;
     }
 
     private static visitedAllVertex(visitedNames: Array<string>, allNames: Array<string>): boolean {

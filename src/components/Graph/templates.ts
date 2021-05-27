@@ -148,3 +148,98 @@ export function getWelshPowellTemplate(type: GraphType): Graph {
 
   return welshPowellGraph;
 }
+// TODO talvez usar o mesmo código de cima, validar se não vai mudar nada
+export function getAStartTemplate(type: GraphType): Graph {
+  const aStarGraph = new Graph(type);
+
+  aStarGraph.addVertex(
+    new Vertex("Cascavel",
+      "Cascavel",
+      { latitude: -24.9555, longitude: -53.4552 }
+    )
+  );
+  aStarGraph.addVertex(
+    new Vertex("Toledo",
+      "Toledo",
+      { latitude: -24.7199, longitude: -53.7433 }
+    )
+  );
+  aStarGraph.addVertex(
+    new Vertex("Foz do Iguaçu",
+      "Foz do Iguaçu",
+      { latitude: -25.5469, longitude: -54.5882 }
+    )
+  );
+  aStarGraph.addVertex(
+    new Vertex("Francisco Beltrão",
+      "Francisco Beltrão",
+      { latitude: -26.0783, longitude: -53.0531 }
+    )
+  );
+  aStarGraph.addVertex(
+    new Vertex("São Mateus do Sul",
+      "São Mateus do Sul",
+      { latitude: -25.8767, longitude: -50.3842 }
+    )
+  );
+  aStarGraph.addVertex(
+    new Vertex("Paranaguá",
+      "Paranaguá",
+      { latitude: -25.5205, longitude: -48.5095 }
+    )
+  );
+  aStarGraph.addVertex(
+    new Vertex("Guarapuava",
+      "Guarapuava",
+      { latitude: -25.3935, longitude: -51.4562 }
+    )
+  );
+  aStarGraph.addVertex(
+    new Vertex("Londrina",
+      "Londrina",
+      { latitude: -23.2927, longitude: -51.1732 }
+    )
+  );
+  aStarGraph.addVertex(
+    new Vertex("Ponta Grossa",
+      "Ponta Grossa",
+      { latitude: -25.0945, longitude: -50.1633 }
+    )
+  );
+
+  aStarGraph.addVertex(
+    new Vertex("Maringá",
+      "Maringá",
+      { latitude: -23.4273, longitude: -51.9375 }
+    )
+  );
+  aStarGraph.addVertex(
+    new Vertex("Umuarama",
+      "Umuarama",
+      { latitude: -23.7641, longitude: -53.3184 }
+    )
+  );
+  aStarGraph.addVertex(
+    new Vertex("Curitiba",
+      "Curitiba",
+      { latitude: -25.4284, longitude: -49.2733 }
+    )
+  );
+
+  aStarGraph.addEdge("Cascavel", "Foz do Iguaçu", 143);
+  aStarGraph.addEdge("Cascavel", "Toledo", 50);
+  aStarGraph.addEdge("Cascavel", "Guarapuava", 250);
+  aStarGraph.addEdge("Cascavel", "Francisco Beltrão", 186);
+  aStarGraph.addEdge("Francisco Beltrão", "São Mateus do Sul", 354);
+  aStarGraph.addEdge("Curitiba", "São Mateus do Sul", 157);
+  aStarGraph.addEdge("Curitiba", "Paranaguá", 90);
+  aStarGraph.addEdge("Curitiba", "Ponta Grossa", 114);
+  aStarGraph.addEdge("Ponta Grossa", "Guarapuava", 165);
+  aStarGraph.addEdge("Ponta Grossa", "Londrina", 273);
+  aStarGraph.addEdge("Ponta Grossa", "Maringá", 314);
+  aStarGraph.addEdge("Londrina", "Maringá", 114);
+  aStarGraph.addEdge("Maringá", "Umuarama", 190);
+  aStarGraph.addEdge("Umuarama", "Toledo", 126);
+
+  return aStarGraph;
+}

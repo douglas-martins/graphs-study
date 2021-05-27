@@ -1,6 +1,6 @@
 import { Edge } from '@components/Graph/edge';
 
-export type Location = { latitude: Number, longitude: Number }
+export type Location = { latitude: number, longitude: number }
 
 export class Vertex {
 
@@ -52,5 +52,10 @@ export class Vertex {
 
     public get color(): number {
         return this._color;
+    }
+
+
+    get mapLocation(): Location {
+        return this._mapLocation;
     }
 }

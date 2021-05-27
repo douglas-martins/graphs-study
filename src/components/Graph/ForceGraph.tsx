@@ -3,8 +3,8 @@ import { ForceGraph3D } from 'react-force-graph';
 import { useWindowDimensions } from '@customHooks/useWindowDimensions';
 import { GraphType } from "@components/Graph/graphType";
 import { Link } from '@components/Graph/link';
+import { GraphDataLink } from '@components/Graph/parseGraph';
 import { useStoreState, useStoreActions } from '../../store/storeHooks';
-
 
 const ForceGraph = (): JSX.Element => {
     const { height } = useWindowDimensions();
@@ -30,6 +30,12 @@ const ForceGraph = (): JSX.Element => {
         <ForceGraph3D
             graphData={forceGraphData} height={height - 61}
             linkDirectionalArrowLength={arrowSize}
+            linkWidth={2}
+            linkColor={link => {
+              const json = JSON.stringify(link);
+              const usableLink = JSON.parse(json);
+              return usableLink.highlighted ? 'yellow' : 'grey';
+            }}
             onNodeRightClick={(node) => removeVertex(`${node.id}`)}
             onLinkRightClick={(link) => {
                 const { source, target } = link;

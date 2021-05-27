@@ -269,13 +269,13 @@ export class Graph {
         return welshPowellGraph;
     }
 
-    public aStar(startVertex: Vertex, endVertex: Vertex) {
+    // TODO revisar se ta certo
+    public aStar(startVertex: Vertex, endVertex: Vertex): Graph {
         const result = new Array<Vertex>();
         let currentVertex = startVertex;
         let hList = new Array<HItem>();
         const visitedVertexNames = new Array<string>();
-
-        let control = 0;
+        result.push(startVertex);
 
         while (currentVertex.name !== endVertex.name) {
             visitedVertexNames.push(currentVertex.name);
@@ -288,11 +288,19 @@ export class Graph {
 
             result.push(bestNeighbor);
             currentVertex = bestNeighbor;
-            control += 1;
-
         }
 
-        console.log(result);
+        const graph = this;
+
+        for (let i = 0; i < result.length - 1; i++) {
+            const source = result[i];
+            const target = result[i + 1];
+
+            const link = source.edges.find(edge => edge.name === target.name);
+            if (link) link.highlighted = true;
+        }
+
+        return graph;
 
     }
 

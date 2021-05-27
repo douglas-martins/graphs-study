@@ -357,9 +357,9 @@ export class Graph {
         const result = new Array<HResult>();
         neighbors.forEach(neighbor => {
             const edge = startVertex.edges.find(item => item.name === neighbor.name);
-            if (edge != undefined) {
+            if (edge != undefined) { //eslint-disable-line
                 const hValue = hList.find(item => item.vertexName === neighbor.name);
-                if (hValue != undefined) {
+                if (hValue != undefined) { //eslint-disable-line
                     const f = edge.value + hValue.value;
                     result.push({ vertex: neighbor, value: f })
                 }

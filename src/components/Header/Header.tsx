@@ -1,28 +1,21 @@
-import React from "react";
-import { ButtonGroup, Dropdown, DropdownButton, Form } from "react-bootstrap";
+import React from 'react';
+import { ButtonGroup, Dropdown, DropdownButton, Form } from 'react-bootstrap';
 
-import "bootstrap/dist/css/bootstrap.min.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './Header.css';
 
-import { Vertex } from "@components/Graph/vertex";
-import AddVertexModal from "@components/Modal/components/AddVertexModal";
-import AddEdgesModal from "@components/Modal/components/AddEdgesModal";
-import SystemModal from "@components/Modal/SystemModal";
-import ProjectInfoModal from "@components/Modal/components/ProjectInfoModal";
-import { useModal } from "@components/Modal/customHooks/useModal";
+import { Vertex } from '@components/Graph/vertex';
+import AddVertexModal from '@components/Modal/components/AddVertexModal';
+import AddEdgesModal from '@components/Modal/components/AddEdgesModal';
+import SystemModal from '@components/Modal/SystemModal';
+import ProjectInfoModal from '@components/Modal/components/ProjectInfoModal';
+import { useModal } from '@components/Modal/customHooks/useModal';
 import { Link } from '@components/Graph/link';
-import { GraphType } from "@components/Graph/graphType";
-import {
-    getAStartTemplate,
-    getBfsDfsTemplate,
-    getPrimTemplate,
-    getWelshPowellTemplate,
-} from '@components/Graph/templates';
-import { Graph } from "@components/Graph/graph";
-import { useStoreActions, useStoreState } from "../../store/storeHooks";
+import { GraphType } from '@components/Graph/graphType';
+import { getBfsDfsTemplate, getCityTemplates, getPrimTemplate } from '@components/Graph/templates';
+import { useStoreActions, useStoreState } from '../../store/storeHooks';
 
 import { graphIcon } from './utils';
-
 
 
 const Header = (): JSX.Element => {
@@ -69,10 +62,10 @@ const Header = (): JSX.Element => {
             setGraph(getPrimTemplate());
         },
         'welsh powell': () => {
-            setGraph(getWelshPowellTemplate(graphType));
+            setGraph(getCityTemplates(graphType));
         },
         astar() {
-            setGraph(getAStartTemplate(graphType));
+            setGraph(getCityTemplates(graphType));
         }
     };
 
@@ -92,28 +85,7 @@ const Header = (): JSX.Element => {
     const modals: { [key: string]: JSX.Element } = {
         vertex: (<AddVertexModal addVertex={handleAddVertex} />),
         edge: (<AddEdgesModal addEdge={handleAddEdge} />),
-        // roy: (<RoyAlgorithmOutput />),
         about: (<ProjectInfoModal />),
-    }
-
-    const royExample = (): void => {
-        const royGraph = new Graph(GraphType.DIRECTED);
-        for (let i = 1; i <= 6; i++) {
-            royGraph.addVertex(new Vertex(i.toString(), i.toString()));
-        }
-
-        royGraph.addEdge('1', '2', 1);
-        royGraph.addEdge('2', '4', 1);
-        royGraph.addEdge('3', '2', 1);
-        royGraph.addEdge('3', '5', 1);
-        royGraph.addEdge('4', '1', 1);
-        royGraph.addEdge('4', '6', 1);
-        royGraph.addEdge('5', '4', 1);
-        royGraph.addEdge('5', '2', 1);
-        royGraph.addEdge('5', '1', 1);
-        royGraph.addEdge('6', '5', 1);
-
-        setGraph(royGraph);
     }
 
     const renderModal: Function = (): JSX.Element | boolean => {
@@ -176,7 +148,7 @@ const Header = (): JSX.Element => {
     return (
         <nav className="navbar navbar-light bg-dark">
             <div className="form-inline">
-                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions,jsx-a11y/anchor-is-valid */}
                 <a className="navbar-brand" onClick={
                     () => changeCurrentModal({ title: 'Sobre o projeto', type: 'about' })
                 }>

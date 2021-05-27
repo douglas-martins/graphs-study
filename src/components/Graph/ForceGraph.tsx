@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { ForceGraph3D } from 'react-force-graph';
 import { useWindowDimensions } from '@customHooks/useWindowDimensions';
-import { GraphType } from "@components/Graph/graphType";
+import { GraphType } from '@components/Graph/graphType';
 import { Link } from '@components/Graph/link';
-import { GraphDataLink } from '@components/Graph/parseGraph';
-import { useStoreState, useStoreActions } from '../../store/storeHooks';
+import { useStoreActions, useStoreState } from '../../store/storeHooks';
 
 const ForceGraph = (): JSX.Element => {
     const { height } = useWindowDimensions();

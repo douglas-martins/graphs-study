@@ -5,6 +5,8 @@ import { Vertex } from '@components/Graph/vertex';
 import { Link } from '@components/Graph/link';
 import { GraphData } from '@components/Graph/parseGraph';
 
+export type AStarPayload = {startVertexName: string, endVertexName: string};
+
 interface StoreModel {
   graph: Graph;
   type: GraphType;
@@ -19,7 +21,7 @@ interface StoreModel {
   runWelshPowell: Action<StoreModel, string>;
   runBfs: Action<StoreModel, string>;
   runDfs: Action<StoreModel, string>;
-  runAStar: Action<StoreModel, string>;
+  runAStar: Action<StoreModel, AStarPayload>;
   onChangeGraph: ActionOn<StoreModel, StoreModel>;
 }
 

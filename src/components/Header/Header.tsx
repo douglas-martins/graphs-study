@@ -13,7 +13,8 @@ import { useModal } from '@components/Modal/customHooks/useModal';
 import { Link } from '@components/Graph/link';
 import { GraphType } from '@components/Graph/graphType';
 import { getBfsDfsTemplate, getCityTemplates, getPrimTemplate } from '@components/Graph/templates';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import AStarModal from '@components/Modal/components/AStarModal';
 import { useStoreActions, useStoreState } from '../../store/storeHooks';
 
 import { graphIcon } from './utils';
@@ -48,12 +49,7 @@ const Header = (): JSX.Element => {
             runWelshPowell('');
         },
         astar () {
-            try {
-                runAStar('');
-            } catch (e) {
-                toast.error(`Não foi possivel aplicar o algoritmo no grafo, ${e}`);
-            }
-
+            changeCurrentModal({ title: 'Selecione o Vertice de partida e de chegada', type: 'aStar' })
         }
     };
 
@@ -88,10 +84,21 @@ const Header = (): JSX.Element => {
             toggle();
         }
 
+    const handleRunAStar: Function =
+      (vertexOne: string, vertexTwo: string): void => {
+          try {
+              runAStar({ startVertexName: vertexOne, endVertexName: vertexTwo });
+              toggle();
+          } catch (e) {
+              toast.error(`Não foi possivel aplicar o algoritmo no grafo, ${e}`);
+          }
+      }
+
     const modals: { [key: string]: JSX.Element } = {
         vertex: (<AddVertexModal addVertex={handleAddVertex} />),
         edge: (<AddEdgesModal addEdge={handleAddEdge} />),
         about: (<ProjectInfoModal />),
+        aStar: (<AStarModal runAStar={handleRunAStar}/>),
     }
 
     const renderModal: Function = (): JSX.Element | boolean => {

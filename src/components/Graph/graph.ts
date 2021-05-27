@@ -227,7 +227,7 @@ export class Graph {
         let color = this.getRandomColor([]);
         const colors = [color];
         const coloredVertex = new Array<Vertex>();
-        let currentVertex = vertexCopy.shift();
+        let currentVertex: Vertex = vertexCopy.shift() as Vertex;
 
         if (currentVertex) {
             currentVertex.color = color
@@ -235,7 +235,7 @@ export class Graph {
         }
 
         while(vertexCopy.length > 0) {
-            const vertex: Vertex | undefined = vertexCopy.shift();
+            const vertex: Vertex | undefined = vertexCopy.shift() as Vertex;
 
             if (vertex && currentVertex) {
                 vertex.color = color;

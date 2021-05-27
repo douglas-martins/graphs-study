@@ -310,16 +310,16 @@ export class Graph {
 
     }
 
-    private calculateH(startVertex: Vertex): Array<HItem> {
+    private calculateH(endVertex: Vertex): Array<HItem> {
         const hList = new Array<HItem>();
 
         this.adjacencyList.forEach((vertex) => {
-            if (vertex.name === startVertex.name) {
-                hList.push(new HItem(startVertex.name, 0));
+            if (vertex.name === endVertex.name) {
+                hList.push(new HItem(endVertex.name, 0));
             } else {
                 const distance = Graph.calcDistance(
-                  startVertex.mapLocation.latitude,
-                  startVertex.mapLocation.longitude,
+                  endVertex.mapLocation.latitude,
+                  endVertex.mapLocation.longitude,
                   vertex.mapLocation.latitude,
                   vertex.mapLocation.longitude
                 );

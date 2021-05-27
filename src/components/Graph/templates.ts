@@ -138,8 +138,8 @@ export function getCityTemplates(type: GraphType): Graph {
   cityTemplates.addEdge("Francisco Beltrão", "São Mateus do Sul", 354);
   cityTemplates.addEdge("Curitiba", "São Mateus do Sul", 157);
   cityTemplates.addEdge("Curitiba", "Paranaguá", 90);
-  cityTemplates.addEdge("Curitiba", "Ponta Grossa", 114);
-  cityTemplates.addEdge("Ponta Grossa", "Guarapuava", 165);
+  cityTemplates.addEdge("Ponta Grossa", "Curitiba", 114);
+  cityTemplates.addEdge("Guarapuava", "Ponta Grossa", 165);
   cityTemplates.addEdge("Ponta Grossa", "Londrina", 273);
   cityTemplates.addEdge("Ponta Grossa", "Maringá", 314);
   cityTemplates.addEdge("Londrina", "Maringá", 114);

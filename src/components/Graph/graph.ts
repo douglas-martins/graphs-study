@@ -1,4 +1,4 @@
-import { orderBy } from 'lodash'
+import { orderBy, find } from 'lodash'
 import { Vertex } from '@components/Graph/vertex';
 import { Edge } from '@components/Graph/edge';
 import { GraphType } from '@components/Graph/graphType';
@@ -224,8 +224,9 @@ export class Graph {
           currentGraph.adjacencyList,
           (vertex) => vertex.edges.length, 'desc'
         );
+        let color = this.getRandomColor([]);
+        const colors = [color];
         const coloredVertex = new Array<Vertex>();
-        let color = 1;
         let currentVertex = vertexCopy.shift();
 
         if (currentVertex) {
@@ -258,14 +259,14 @@ export class Graph {
                     }
                 }
             }
-            color += 1;
+            color = this.getRandomColor(colors);
             if (vertex) {
                 currentVertex = vertex;
             }
         }
 
         welshPowellGraph.adjacencyList = coloredVertex;
-        welshPowellGraph.chromaticNumber = color - 1;
+        welshPowellGraph.chromaticNumber = colors.length - 1;
         return welshPowellGraph;
     }
 
@@ -372,6 +373,30 @@ export class Graph {
 
         return result[0].vertex;
     }
+
+    /**
+     * Generate random color string value for the dynamic number of bots
+     * @returns: string
+     */
+    // eslint-disable-next-line class-methods-use-this
+    private generateRandomColorString() : string {
+        return Math.floor(Math.random() * 16777215).toString(16);
+    }
+
+    /**
+     * Generate a random color that is not in the colors array yet
+     * @param {string[]} colors
+     */
+    private getRandomColor = (colors: Array<String>) => {
+        let color = `#${this.generateRandomColorString()}`;
+        while (find(colors, color)) {
+            color = `#${this.generateRandomColorString()}`;
+        }
+        colors.push(color);
+        return color;
+    };
+
+
 
     private static visitedAllVertex(visitedNames: Array<string>, allNames: Array<string>): boolean {
         for (const name of allNames) {

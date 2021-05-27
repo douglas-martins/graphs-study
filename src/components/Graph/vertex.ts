@@ -54,8 +54,11 @@ export class Vertex {
         return this._color;
     }
 
-
     get mapLocation(): Location {
         return this._mapLocation;
+    }
+
+    set mapLocation(value: Location) {
+        this._mapLocation = value;
     }
 }

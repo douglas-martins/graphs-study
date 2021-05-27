@@ -71,8 +71,11 @@ const Header = (): JSX.Element => {
         }
     };
 
-    const handleAddVertex: Function = (name: string, label: string): void => {
+    const handleAddVertex: Function = (name: string, label: string, latitude: string, longitude: string): void => {
         const vertex = new Vertex(name, label);
+        if (latitude !== undefined && longitude !== undefined) {
+            vertex.mapLocation = { latitude: Number(latitude), longitude: Number(longitude) };
+        }
         addVertex(vertex);
         toggle();
     }

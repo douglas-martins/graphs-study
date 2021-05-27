@@ -269,17 +269,16 @@ export class Graph {
         return welshPowellGraph;
     }
 
-    // TODO revisar se ta certo
     public aStar(startVertex: Vertex, endVertex: Vertex): Graph {
         const result = new Array<Vertex>();
         let currentVertex = startVertex;
-        let hList = new Array<HItem>();
+        const hList = this.calculateH(endVertex);
         const visitedVertexNames = new Array<string>();
         result.push(startVertex);
 
         while (currentVertex.name !== endVertex.name) {
             visitedVertexNames.push(currentVertex.name);
-            hList = this.calculateH(currentVertex);
+
 
             const neighbors = this.getVertexNeighbors(currentVertex, visitedVertexNames);
 

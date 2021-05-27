@@ -292,6 +292,13 @@ export class Graph {
 
         const graph = this;
 
+        graph.adjacencyList.forEach(vertex => {
+            vertex.edges.forEach(edge => {
+                /* eslint-disable no-param-reassign */
+                edge.highlighted = false;
+            })
+        })
+
         for (let i = 0; i < result.length - 1; i++) {
             const source = result[i];
             const target = result[i + 1];

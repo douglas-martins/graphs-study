@@ -13,6 +13,7 @@ import { useModal } from '@components/Modal/customHooks/useModal';
 import { Link } from '@components/Graph/link';
 import { GraphType } from '@components/Graph/graphType';
 import { getBfsDfsTemplate, getCityTemplates, getPrimTemplate } from '@components/Graph/templates';
+import { ToastContainer, toast } from 'react-toastify';
 import { useStoreActions, useStoreState } from '../../store/storeHooks';
 
 import { graphIcon } from './utils';
@@ -47,7 +48,12 @@ const Header = (): JSX.Element => {
             runWelshPowell('');
         },
         astar () {
-            runAStar('');
+            try {
+                runAStar('');
+            } catch (e) {
+                toast.error(`Não foi possivel aplicar o algoritmo no grafo, ${e}`);
+            }
+
         }
     };
 
@@ -202,6 +208,7 @@ const Header = (): JSX.Element => {
                     />
                 </Form>
             </div>
+            <ToastContainer />
             {renderModal()}
         </nav>
     )

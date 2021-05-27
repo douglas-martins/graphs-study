@@ -1,6 +1,7 @@
 import React, { Router } from 'react-router-dom';
 
 import './App.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Header from '@components/Header/Header';
 import ForceGraph from '@components/Graph/ForceGraph';

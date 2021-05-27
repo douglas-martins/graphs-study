@@ -282,7 +282,7 @@ export class Graph {
 
             const neighbors = this.getVertexNeighbors(currentVertex, visitedVertexNames);
 
-            if (neighbors.length === 0) throw new Error("No neighbors");
+            if (neighbors.length === 0) throw new Error(`${currentVertex.name} hasn't neighbors`);
             const bestNeighbor = Graph.findBestNeighbor(currentVertex, neighbors, hList);
 
             result.push(bestNeighbor);

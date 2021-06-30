@@ -148,3 +148,37 @@ export function getCityTemplates(type: GraphType): Graph {
 
   return cityTemplates;
 }
+
+export function getCompanyAndCustomersTemplate(): Graph {
+  const graph = new Graph(GraphType.UNDIRECTED);
+
+  graph.addVertex(new Vertex("O", "O"));
+  graph.addVertex(new Vertex("A", "A"));
+  graph.addVertex(new Vertex("B", "B"));
+  graph.addVertex(new Vertex("C", "C"));
+  graph.addVertex(new Vertex("D", "D"));
+  graph.addVertex(new Vertex("E", "E"));
+
+  graph.addEdge("A", "B", 10);
+  graph.addEdge("A", "C", 12);
+  graph.addEdge("A", "D", 18);
+  graph.addEdge("A", "O", 10);
+
+  graph.addEdge("B", "C", 7);
+  graph.addEdge("B", "E", 12);
+  graph.addEdge("B", "D", 12);
+  graph.addEdge("B", "O", 5);
+
+  graph.addEdge("C", "D", 8);
+  graph.addEdge("C", "O", 5);
+  graph.addEdge("C", "E", 12);
+
+  graph.addEdge("D", "E", 10);
+  graph.addEdge("D", "O", 10);
+
+  graph.addEdge("E", "A", 10);
+  graph.addEdge("E", "O", 10);
+
+
+  return graph;
+}

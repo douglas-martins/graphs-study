@@ -12,7 +12,12 @@ import ProjectInfoModal from '@components/Modal/components/ProjectInfoModal';
 import { useModal } from '@components/Modal/customHooks/useModal';
 import { Link } from '@components/Graph/link';
 import { GraphType } from '@components/Graph/graphType';
-import { getBfsDfsTemplate, getCityTemplates, getPrimTemplate } from '@components/Graph/templates';
+import {
+    getBfsDfsTemplate,
+    getCityTemplates,
+    getCompanyAndCustomersTemplate,
+    getPrimTemplate,
+} from '@components/Graph/templates';
 import { toast, ToastContainer } from 'react-toastify';
 import AStarModal from '@components/Modal/components/AStarModal';
 import { useStoreActions, useStoreState } from '../../store/storeHooks';
@@ -68,6 +73,9 @@ const Header = (): JSX.Element => {
         },
         astar() {
             setGraph(getCityTemplates(graphType));
+        },
+        economy() {
+            setGraph(getCompanyAndCustomersTemplate());
         }
     };
 
@@ -144,6 +152,7 @@ const Header = (): JSX.Element => {
         }
         elements.push('Welsh Powell');
         elements.push('aStar');
+        elements.push('Economy');
 
         return elements.map((algorithm, index) => (
             <Dropdown.Item key={algorithm} eventKey={index.toString()}

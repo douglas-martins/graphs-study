@@ -74,6 +74,16 @@ const store = createStore<StoreModel>({
     }
   }),
 
+  runEconomies: action((state, payload) => {
+    const startVertex = state.graph.adjacencyList.find(item => item.name === "O"); // TODO fazer isso dinamico
+
+    if (startVertex !== undefined ) {
+      const resultGraph = state.graph.economies(startVertex);
+      state.graph = resultGraph;
+      state.forceGraphData = parseGraph(resultGraph);
+    }
+  }),
+
   onChangeGraph: actionOn(
     actions => [actions.addEdge, actions.addVertex, actions.createNewGraph, actions.setGraph, actions.deleteEdge, actions.deleteVertex],
     (state, payload) => {

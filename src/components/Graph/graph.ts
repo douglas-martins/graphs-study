@@ -4,6 +4,7 @@ import { Edge } from '@components/Graph/edge';
 import { GraphType } from '@components/Graph/graphType';
 import { EdgeToCheck } from '@components/Graph/prim/EdgeToCheck';
 import { HItem } from '@components/Graph/HItem';
+import { S } from '@components/Graph/s';
 
 export type HResult = { vertex: Vertex, value: number };
 
@@ -423,4 +424,63 @@ export class Graph {
 
         return hasVertex;
     }
+
+
+    public economies(startVertex: Vertex): Graph {
+        const neighbors = this.getVertexNeighbors(startVertex, []);
+        let economyList = new Array<S>();
+
+        // Calculate economy list
+        for (let i = 0; i < neighbors.length - 2; i++) {
+            const current = neighbors[i];
+            const next = neighbors[i + 1];
+
+            const currentToStart = current.edges.find(edge => edge.name === startVertex.name);
+            const nextToStart = next.edges.find(edge => edge.name === startVertex.name);
+            const currentToNext = current.edges.find(edge => edge.name === next.name);
+
+            if (currentToStart === undefined || nextToStart === undefined || currentToNext === undefined) {
+                throw new Error("Undefined values")
+            }
+
+            const sValue = currentToStart.value + nextToStart.value - currentToNext.value;
+            const s = new S(current, next, sValue);
+            economyList.push(s);
+        }
+
+        // Sorts in descending order
+        economyList = economyList.sort((a, b) => b.value - a.value);
+
+        const path = new Array<Vertex>(); // TODO tirar esse path
+        path.push(startVertex);
+        for (const s of economyList) {
+            const link = s.first.edges.find(edge => edge.name === s.second.name);
+            if (link === undefined) {
+                throw new Error("Undefined values");
+            }
+            // inverter essa logica pode ajudar tambem
+            if (link.value < s.value) {
+                link.highlighted = true;
+                path.push(s.first);
+                path.push(s.second);
+            } else {
+                const firstToStart = s.first.edges.find(edge => edge.name === startVertex.name);
+                const secondToStart = s.second.edges.find(edge => edge.name === startVertex.name);
+
+                if (firstToStart === undefined || secondToStart === undefined) {
+                    throw new Error("Undefined values");
+                }
+
+                firstToStart.highlighted = true;
+                secondToStart.highlighted = true;
+                path.push(s.first);
+                path.push(startVertex);
+                path.push(s.second);
+            }
+        }
+
+        const graph = this;
+        return graph;
+    }
+
 }

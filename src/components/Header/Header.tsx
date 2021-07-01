@@ -37,6 +37,7 @@ const Header = (): JSX.Element => {
     const runWelshPowell = useStoreActions((actions) => actions.runWelshPowell);
     const runBfs = useStoreActions((actions) => actions.runBfs);
     const runDfs = useStoreActions((actions) => actions.runDfs);
+    const runEconomies = useStoreActions((actions) => actions.runEconomies);
     const runAStar = useStoreActions((actions) => actions.runAStar);
     const setGraph = useStoreActions((actions) => actions.setGraph);
 
@@ -55,7 +56,10 @@ const Header = (): JSX.Element => {
         },
         astar () {
             changeCurrentModal({ title: 'Selecione o Vertice de partida e de chegada', type: 'aStar' })
-        }
+        },
+        economies () {
+            runEconomies('');
+        },
     };
 
     const samples: { [key: string]: () => void }  = {
@@ -74,7 +78,7 @@ const Header = (): JSX.Element => {
         astar() {
             setGraph(getCityTemplates(graphType));
         },
-        economy() {
+        economies() {
             setGraph(getCompanyAndCustomersTemplate());
         }
     };
@@ -152,7 +156,7 @@ const Header = (): JSX.Element => {
         }
         elements.push('Welsh Powell');
         elements.push('aStar');
-        elements.push('Economy');
+        elements.push('Economies');
 
         return elements.map((algorithm, index) => (
             <Dropdown.Item key={algorithm} eventKey={index.toString()}

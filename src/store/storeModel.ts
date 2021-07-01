@@ -22,6 +22,7 @@ interface StoreModel {
   runBfs: Action<StoreModel, string>;
   runDfs: Action<StoreModel, string>;
   runAStar: Action<StoreModel, AStarPayload>;
+  runEconomies: Action<StoreModel, string>;
   onChangeGraph: ActionOn<StoreModel, StoreModel>;
 }
 

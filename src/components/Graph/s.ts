@@ -2,32 +2,33 @@ import { Vertex } from '@components/Graph/vertex';
 
 export class S {
 
-  private _first: Vertex;
+  private _iVertex: Vertex;
 
-  private _second: Vertex;
+  private _jVertex: Vertex;
 
   private _value: number;
 
-  constructor(first: Vertex, second: Vertex, value: number) {
-    this._first = first;
-    this._second = second;
+
+  constructor(iVertex: Vertex, jVertex: Vertex, value: number) {
+    this._iVertex = iVertex;
+    this._jVertex = jVertex;
     this._value = value;
   }
 
-  get first(): Vertex {
-    return this._first;
+  get iVertex(): Vertex {
+    return this._iVertex;
   }
 
-  set first(value: Vertex) {
-    this._first = value;
+  set iVertex(value: Vertex) {
+    this._iVertex = value;
   }
 
-  get second(): Vertex {
-    return this._second;
+  get jVertex(): Vertex {
+    return this._jVertex;
   }
 
-  set second(value: Vertex) {
-    this._second = value;
+  set jVertex(value: Vertex) {
+    this._jVertex = value;
   }
 
   get value(): number {
@@ -37,5 +38,4 @@ export class S {
   set value(value: number) {
     this._value = value;
   }
-
 }

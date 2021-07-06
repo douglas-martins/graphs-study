@@ -430,34 +430,37 @@ export class Graph {
         const neighbors = this.getVertexNeighbors(startVertex, []);
         let economyList = new Array<S>();
 
+        // Calculate S list
         for (let i = 0; i < neighbors.length; i++) {
-            const current = neighbors[i];
+            const iVertex = neighbors[i];
             for (let j = i; j < neighbors.length; j++) {
-                const next = neighbors[j];
+                const jVertex = neighbors[j];
 
-                if (current === next) continue;
+                if (iVertex === jVertex) continue;
 
-                const currentToStart = current.edges.find(edge => edge.name === startVertex.name);
-                const nextToStart = next.edges.find(edge => edge.name === startVertex.name);
-                const currentToNext = current.edges.find(edge => edge.name === next.name);
+                const iToKLink = iVertex.edges.find(edge => edge.name === startVertex.name);
+                const jToKLink = jVertex.edges.find(edge => edge.name === startVertex.name);
+                const iToJLink = iVertex.edges.find(edge => edge.name === jVertex.name);
 
-                if (currentToStart === undefined || nextToStart === undefined || currentToNext === undefined) {
+                // avoid Typescript error
+                if (iToKLink === undefined || jToKLink === undefined || iToJLink === undefined) {
                     throw new Error("Undefined values")
                 }
 
-                const sValue = currentToStart.value + nextToStart.value - currentToNext.value;
-                const s = new S(current, next, sValue);
+                const sValue = iToKLink.value + jToKLink.value - iToJLink.value;
+                const s = new S(iVertex, jVertex, sValue);
                 economyList.push(s);
             }
         }
 
-        console.log('economyList', economyList.map(i => i.first.name + " - " + i.second.name));
-        // Sorts in descending order
+        // Sorts S list in descending order
         economyList = economyList.sort((a, b) => b.value - a.value);
 
         const graph = this;
 
-        // Ver no slide como deveria ser isso
+        for (const s of economyList) {
+            console.log(s);
+        }
 
         return graph;
     }

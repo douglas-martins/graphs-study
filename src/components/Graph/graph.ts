@@ -453,15 +453,33 @@ export class Graph {
             }
         }
 
-        // Sorts S list in descending order
+        // Sorts S list in descending order, more economy first
         economyList = economyList.sort((a, b) => b.value - a.value);
 
-        const graph = this;
-
+        const roadMaps = new Array<Array<string>>();
         for (const s of economyList) {
-            console.log(s);
+            // d) Verifica se o par não esta já no mesmo roteiro
+            if (roadMaps.some(item => item.includes(s.iVertex.name) && item.includes(s.jVertex.name))) {
+                continue;
+            }
+
+            // a) Caso os nós i e j não estejam em nenhum roteiro, criar um para eles
+            if (!roadMaps.some(item => item.includes(s.iVertex.name) || item.includes(s.jVertex.name))) {
+                roadMaps.push([s.iVertex.name, s.jVertex.name]);
+                continue;
+            }
+
+            // b) Se apenas um dos pontos pertence a um roteiro já existente, e esse ponto é um extremidade,
+            // adiciona o outro ponto a essa extremidade
+
+            // c) Caso i e j percencem a roteiros já existentes e ambos são extremidades dele, fundir os dois
+
         }
 
+        //e) Caso algum nó fique de fora, criar um roteiro dele com o k
+
+        const graph = this;
+        // Destacar os nodos de acordo com o roteiro
         return graph;
     }
 

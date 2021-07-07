@@ -75,13 +75,10 @@ const store = createStore<StoreModel>({
   }),
 
   runEconomies: action((state, payload) => {
-    const startVertex = state.graph.adjacencyList.find(item => item.name === payload);
+    const resultGraph = state.graph.economies(payload.startVertex, payload.maxValue);
+    state.graph = resultGraph;
+    state.forceGraphData = parseGraph(resultGraph);
 
-    if (startVertex !== undefined ) {
-      const resultGraph = state.graph.economies(startVertex, 30); // TODO esse 30 ser parametrizado
-      state.graph = resultGraph;
-      state.forceGraphData = parseGraph(resultGraph);
-    }
   }),
 
   onChangeGraph: actionOn(

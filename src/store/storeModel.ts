@@ -6,6 +6,7 @@ import { Link } from '@components/Graph/link';
 import { GraphData } from '@components/Graph/parseGraph';
 
 export type AStarPayload = {startVertexName: string, endVertexName: string};
+export type EconomiesPayload = {startVertex: Vertex, maxValue: number};
 
 interface StoreModel {
   graph: Graph;
@@ -22,7 +23,7 @@ interface StoreModel {
   runBfs: Action<StoreModel, string>;
   runDfs: Action<StoreModel, string>;
   runAStar: Action<StoreModel, AStarPayload>;
-  runEconomies: Action<StoreModel, string>;
+  runEconomies: Action<StoreModel, EconomiesPayload>;
   onChangeGraph: ActionOn<StoreModel, StoreModel>;
 }
 

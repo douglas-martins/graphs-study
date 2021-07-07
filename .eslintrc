@@ -22,6 +22,7 @@
     "object-shorthand": "off",
     "no-param-reassign": "off",
     "arrow-body-style": "off",
+    "radix": "off",
     "no-unused-vars": [
       "warn",
       {

@@ -18,11 +18,13 @@ import {
     getCompanyAndCustomersTemplate,
     getPrimTemplate,
 } from '@components/Graph/templates';
+import EconomiesModal from '@components/Modal/components/EconomiesModal';
 import { toast, ToastContainer } from 'react-toastify';
 import AStarModal from '@components/Modal/components/AStarModal';
 import { useStoreActions, useStoreState } from '../../store/storeHooks';
 
 import { graphIcon } from './utils';
+
 
 
 const Header = (): JSX.Element => {
@@ -58,10 +60,7 @@ const Header = (): JSX.Element => {
             changeCurrentModal({ title: 'Selecione o Vertice de partida e de chegada', type: 'aStar' })
         },
         economies () {
-            runEconomies('O');
-        },
-        'economies book'() {
-            runEconomies('1');
+            changeCurrentModal({ title: 'Selecione o Vertice de partida e a carga maxima do veiculo', type: 'economies' })
         },
     };
 
@@ -115,11 +114,17 @@ const Header = (): JSX.Element => {
           }
       }
 
+    const handleRunEconomies: Function = (startVertex: Vertex, maxValue: number): void => {
+        runEconomies({ startVertex, maxValue });
+        toggle();
+    }
+
     const modals: { [key: string]: JSX.Element } = {
         vertex: (<AddVertexModal addVertex={handleAddVertex} />),
         edge: (<AddEdgesModal addEdge={handleAddEdge} />),
         about: (<ProjectInfoModal />),
         aStar: (<AStarModal runAStar={handleRunAStar}/>),
+        economies: (<EconomiesModal runEconomies={handleRunEconomies}/>),
     }
 
     const renderModal: Function = (): JSX.Element | boolean => {
@@ -152,8 +157,7 @@ const Header = (): JSX.Element => {
         createNewGraph(newType);
     };
 
-    const renderAlgorithmsDropdownOptions =
-        (mappedValues: { [key: string]: () => void }): JSX.Element[] => {
+    const renderAlgorithmsDropdownOptions = (mappedValues: { [key: string]: () => void }, removeEconomiesBook?:boolean): JSX.Element[] => {
         const elements = ['BFS', 'DFS']
         if (graphType === GraphType.DIRECTED) {
             elements.push('Roy');
@@ -163,7 +167,7 @@ const Header = (): JSX.Element => {
         elements.push('Welsh Powell');
         elements.push('aStar');
         elements.push('Economies');
-        elements.push('Economies Book');
+        !removeEconomiesBook && elements.push('Economies Book');
 
         return elements.map((algorithm, index) => (
             <Dropdown.Item key={algorithm} eventKey={index.toString()}
@@ -216,7 +220,7 @@ const Header = (): JSX.Element => {
                     title="Selecione um algoritmo"
                     disabled={graph.adjacencyList.length < 2}
                 >
-                    {renderAlgorithmsDropdownOptions(algorithms)}
+                    {renderAlgorithmsDropdownOptions(algorithms, true)}
                 </DropdownButton>
                 <DropdownButton
                   as={ButtonGroup}

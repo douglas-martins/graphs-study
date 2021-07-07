@@ -1,10 +1,11 @@
-import { orderBy, find } from 'lodash'
+import { find, orderBy, pull, reverse } from 'lodash';
 import { Vertex } from '@components/Graph/vertex';
 import { Edge } from '@components/Graph/edge';
 import { GraphType } from '@components/Graph/graphType';
 import { EdgeToCheck } from '@components/Graph/prim/EdgeToCheck';
 import { HItem } from '@components/Graph/HItem';
 import { S } from '@components/Graph/s';
+import { Extremity } from '@components/Graph/extremity';
 
 export type HResult = { vertex: Vertex, value: number };
 
@@ -458,6 +459,11 @@ export class Graph {
 
         const roadMaps = new Array<Array<string>>();
         for (const s of economyList) {
+            // Descarta valores que não são economias
+            if (s.value < 0) {
+                continue;
+            }
+
             // d) Verifica se o par não esta já no mesmo roteiro
             if (roadMaps.some(item => item.includes(s.iVertex.name) && item.includes(s.jVertex.name))) {
                 continue;
@@ -469,18 +475,83 @@ export class Graph {
                 continue;
             }
 
+            const iRoad = roadMaps.find(item => item.includes(s.iVertex.name));
+            const jRoad = roadMaps.find(item => item.includes(s.iVertex.name));
+
             // b) Se apenas um dos pontos pertence a um roteiro já existente, e esse ponto é um extremidade,
             // adiciona o outro ponto a essa extremidade
+            if (iRoad !== undefined && jRoad === undefined) {
+                if (iRoad[0] === s.iVertex.name) {
+                    iRoad.unshift(s.jVertex.name);
+                    continue;
+                } else if (iRoad[iRoad.length - 1] === s.iVertex.name) {
+                    iRoad.push(s.jVertex.name);
+                    continue;
+                }
+            }
 
-            // c) Caso i e j percencem a roteiros já existentes e ambos são extremidades dele, fundir os dois
+            if (jRoad !== undefined && iRoad === undefined) {
+                if (jRoad[0] === s.jVertex.name) {
+                    jRoad.unshift(s.iVertex.name);
+                    continue;
+                } else if (jRoad[jRoad.length - 1] === s.jVertex.name) {
+                    jRoad.push(s.iVertex.name);
+                    continue;
+                }
+            }
+
+
+            // c) Caso i e j percencem a roteiros já existentes e ambos são extremidades dele, fundir os dois roteiros
+            if (iRoad !== undefined && jRoad !== undefined) {
+                const extremityI = this.isExtremity(iRoad, s.iVertex.name);
+                const extremityJ = this.isExtremity(jRoad, s.jVertex.name);
+
+                if (extremityI !== Extremity.NOT && extremityJ !== Extremity.NOT) {
+                    if (extremityI === Extremity.START && extremityJ === Extremity.END) {
+                        jRoad.concat(iRoad);
+                        pull(roadMaps, iRoad);
+                        continue;
+                    }
+
+                    if (extremityI === Extremity.END && extremityJ === Extremity.START) {
+                        iRoad.concat(jRoad);
+                        pull(roadMaps, jRoad);
+                        continue;
+                    }
+
+                    if (extremityI === Extremity.START && extremityJ === Extremity.START) {
+                        reverse(iRoad);
+                        iRoad.concat(jRoad);
+                        pull(roadMaps, jRoad);
+                        continue;
+                    }
+
+                    if (extremityI === Extremity.END && extremityJ === Extremity.END) {
+                        reverse(jRoad);
+                        iRoad.concat(jRoad);
+                        pull(roadMaps, jRoad);
+                    }
+                }
+            }
 
         }
 
-        //e) Caso algum nó fique de fora, criar um roteiro dele com o k
+        console.log('roadMaps', roadMaps);
+        // pegar as pontas das rotas e ligar no k (start vertex)
+
+        // e) Caso algum nó fique de fora, criar um roteiro dele com o k
+        // ver se algum neighbor não está na rota e fazer isso
 
         const graph = this;
         // Destacar os nodos de acordo com o roteiro
         return graph;
     }
+
+    private isExtremity(list: Array<string>, item: string): Extremity {
+        if (list[0] === item) return Extremity.START;
+        if (list[list.length - 1] === item) return Extremity.END;
+        return Extremity.NOT
+    }
+
 
 }

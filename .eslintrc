@@ -17,6 +17,8 @@
     "no-continue": "off",
     "prefer-template": "off",
     "no-console": "off",
+    "no-empty": "off",
+    "class-methods-use-this": "off",
     "no-unused-vars": [
       "warn",
       {

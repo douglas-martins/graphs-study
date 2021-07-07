@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ForceGraph3D } from 'react-force-graph';
+import { ForceGraph2D } from 'react-force-graph';
 import { useWindowDimensions } from '@customHooks/useWindowDimensions';
 import { GraphType } from '@components/Graph/graphType';
 import { Link } from '@components/Graph/link';
@@ -26,7 +26,7 @@ const ForceGraph = (): JSX.Element => {
     }
 
     return (
-        <ForceGraph3D
+        <ForceGraph2D
             graphData={forceGraphData} height={height - 61}
             linkDirectionalArrowLength={arrowSize}
             linkWidth={2}

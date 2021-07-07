@@ -427,7 +427,7 @@ export class Graph {
     }
 
 
-    public economies(startVertex: Vertex): Graph {
+    public economies(startVertex: Vertex, maximumVehicleLoad: number): Graph {
         const neighbors = this.getVertexNeighbors(startVertex, []);
         let economyList = new Array<S>();
 
@@ -457,7 +457,7 @@ export class Graph {
         // Sorts S list in descending order, more economy first
         economyList = economyList.sort((a, b) => b.value - a.value);
 
-        const roadMaps = new Array<Array<string>>();
+        const roadMaps = new Array<Array<Vertex>>();
         for (const s of economyList) {
 
             // Descarta valores que não são economias
@@ -465,42 +465,40 @@ export class Graph {
                 continue;
             }
 
+            // Aqui fazer a validação do total
+
             // d) Verifica se o par não esta já no mesmo roteiro
-            if (roadMaps.some(item => item.includes(s.iVertex.name) && item.includes(s.jVertex.name))) {
-                console.log('d');
+            if (roadMaps.some(item => item.includes(s.iVertex) && item.includes(s.jVertex))) {
                 continue;
             }
 
             // a) Caso os nós i e j não estejam em nenhum roteiro, criar um para eles
-            if (!roadMaps.some(item => item.includes(s.iVertex.name) || item.includes(s.jVertex.name))) {
-                console.log('a');
-                roadMaps.push([s.iVertex.name, s.jVertex.name]);
+            if (!roadMaps.some(item => item.includes(s.iVertex) || item.includes(s.jVertex))) {
+                roadMaps.push([s.iVertex, s.jVertex]);
                 continue;
             }
 
-            const iRoad = roadMaps.find(item => item.includes(s.iVertex.name));
-            const jRoad = roadMaps.find(item => item.includes(s.jVertex.name));
+            const iRoad = roadMaps.find(item => item.includes(s.iVertex));
+            const jRoad = roadMaps.find(item => item.includes(s.jVertex));
 
             // b) Se apenas um dos pontos pertence a um roteiro já existente, e esse ponto é um extremidade,
             // adiciona o outro ponto a essa extremidade
             if (iRoad !== undefined && jRoad === undefined) {
-                console.log('b');
-                if (iRoad[0] === s.iVertex.name) {
-                    iRoad.unshift(s.jVertex.name);
+                if (iRoad[0] === s.iVertex) {
+                    iRoad.unshift(s.jVertex);
                     continue;
-                } else if (iRoad[iRoad.length - 1] === s.iVertex.name) {
-                    iRoad.push(s.jVertex.name);
+                } else if (iRoad[iRoad.length - 1] === s.iVertex) {
+                    iRoad.push(s.jVertex);
                     continue;
                 }
             }
 
             if (jRoad !== undefined && iRoad === undefined) {
-
-                if (jRoad[0] === s.jVertex.name) {
-                    jRoad.unshift(s.iVertex.name);
+                if (jRoad[0] === s.jVertex) {
+                    jRoad.unshift(s.iVertex);
                     continue;
-                } else if (jRoad[jRoad.length - 1] === s.jVertex.name) {
-                    jRoad.push(s.iVertex.name);
+                } else if (jRoad[jRoad.length - 1] === s.jVertex) {
+                    jRoad.push(s.iVertex);
                     continue;
                 }
             }
@@ -508,8 +506,8 @@ export class Graph {
 
             // c) Caso i e j percencem a roteiros já existentes e ambos são extremidades dele, fundir os dois roteiros
             if (iRoad !== undefined && jRoad !== undefined) {
-                const extremityI = this.isExtremity(iRoad, s.iVertex.name);
-                const extremityJ = this.isExtremity(jRoad, s.jVertex.name);
+                const extremityI = Graph.isExtremity(iRoad, s.iVertex);
+                const extremityJ = Graph.isExtremity(jRoad, s.jVertex);
 
                 if (extremityI !== Extremity.NOT && extremityJ !== Extremity.NOT) {
 
@@ -545,33 +543,29 @@ export class Graph {
         // e) Caso algum nó fique de fora, criar um roteiro dele com o k
         // ver se algum neighbor não está na rota e fazer isso
         for (const roadMap of roadMaps) {
-            roadMap.unshift(startVertex.name);
-            roadMap.push(startVertex.name);
+            roadMap.unshift(startVertex);
+            roadMap.push(startVertex);
         }
 
         const graph = this;
 
         Graph.clearHighlight(graph);
 
+        // Destaca o caminho
         for (const roadMap of roadMaps) {
-
+            console.info('Route', roadMap.map(item => item.name).join(" - "));
             for (let i = 0; i < roadMap.length - 1; i++) {
                 const current = roadMap[i];
                 const next = roadMap[i + 1]
-
-                const currentVertex = graph.adjacencyList.find(vertex => vertex.name === current);
-
-                if (currentVertex) {
-                    const link = currentVertex.edges.find(ed => ed.name === next);
-                    if (link) link.highlighted = true;
-                }
+                const link = current.edges.find(ed => ed.name === next.name);
+                if (link) link.highlighted = true;
             }
         }
 
         return graph;
     }
 
-    private isExtremity(list: Array<string>, item: string): Extremity {
+    private static isExtremity(list: Array<Vertex>, item: Vertex): Extremity {
         if (list[0] === item) return Extremity.START;
         if (list[list.length - 1] === item) return Extremity.END;
         return Extremity.NOT

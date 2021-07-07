@@ -6,6 +6,7 @@ import { EdgeToCheck } from '@components/Graph/prim/EdgeToCheck';
 import { HItem } from '@components/Graph/HItem';
 import { S } from '@components/Graph/s';
 import { Extremity } from '@components/Graph/extremity';
+import randomcolor from "randomcolor"
 
 export type HResult = { vertex: Vertex, value: number };
 
@@ -459,13 +460,10 @@ export class Graph {
 
         const roadMaps = new Array<Array<Vertex>>();
         for (const s of economyList) {
-
             // Descarta valores que não são economias
             if (s.value < 0) {
                 continue;
             }
-
-            // Aqui fazer a validação do total
 
             // d) Verifica se o par não esta já no mesmo roteiro
             if (roadMaps.some(item => item.includes(s.iVertex) && item.includes(s.jVertex))) {
@@ -484,6 +482,11 @@ export class Graph {
             // b) Se apenas um dos pontos pertence a um roteiro já existente, e esse ponto é um extremidade,
             // adiciona o outro ponto a essa extremidade
             if (iRoad !== undefined && jRoad === undefined) {
+                // Checa se ultrapassa o limite
+                const iRoadSize = Graph.calculateRoadMapSize(iRoad, startVertex);
+                const linkIJ = s.iVertex.edges.find(ed => ed.name === s.jVertex.name);
+                if (linkIJ && ((iRoadSize + linkIJ.value) > maximumVehicleLoad)) continue;
+
                 if (iRoad[0] === s.iVertex) {
                     iRoad.unshift(s.jVertex);
                     continue;
@@ -494,6 +497,11 @@ export class Graph {
             }
 
             if (jRoad !== undefined && iRoad === undefined) {
+                // Checa se ultrapassa o limite
+                const jRoadSize = Graph.calculateRoadMapSize(jRoad, startVertex);
+                const linkIJ = s.jVertex.edges.find(ed => ed.name === s.iVertex.name);
+                if (linkIJ && ((jRoadSize + linkIJ.value) > maximumVehicleLoad)) continue;
+
                 if (jRoad[0] === s.jVertex) {
                     jRoad.unshift(s.iVertex);
                     continue;
@@ -510,6 +518,11 @@ export class Graph {
                 const extremityJ = Graph.isExtremity(jRoad, s.jVertex);
 
                 if (extremityI !== Extremity.NOT && extremityJ !== Extremity.NOT) {
+                    // verifica se o merge dos dois não ultrapassa o limite
+                    const iRoadSize = Graph.calculateRoadMapSize(iRoad, startVertex);
+                    const jRoadSize = Graph.calculateRoadMapSize(jRoad, startVertex);
+
+                    if ((iRoadSize + jRoadSize) > maximumVehicleLoad) continue;
 
                     if (extremityI === Extremity.START && extremityJ === Extremity.END) {
                         jRoad.concat(iRoad);
@@ -537,11 +550,20 @@ export class Graph {
                     }
                 }
             }
-
         }
+
+
 
         // e) Caso algum nó fique de fora, criar um roteiro dele com o k
         // ver se algum neighbor não está na rota e fazer isso
+        for (const neighbor of neighbors) {
+            const hasRoadMap = roadMaps.some(roadMap => roadMap.includes(neighbor));
+            if (!hasRoadMap) {
+                roadMaps.push([neighbor])
+            }
+        }
+
+        // Ligando as pontas de volta em k
         for (const roadMap of roadMaps) {
             roadMap.unshift(startVertex);
             roadMap.push(startVertex);
@@ -552,13 +574,21 @@ export class Graph {
         Graph.clearHighlight(graph);
 
         // Destaca o caminho
-        for (const roadMap of roadMaps) {
+        const colors = randomcolor({ count: roadMaps.length, luminosity: 'dark' })
+        console.log('colors', colors);
+        for (let roadIndex = 0; roadIndex < roadMaps.length; roadIndex++) {
+            const roadMap = roadMaps[roadIndex];
             console.info('Route', roadMap.map(item => item.name).join(" - "));
+            console.info('calculateRoadMapSize', Graph.calculateRoadMapSize(roadMap));
             for (let i = 0; i < roadMap.length - 1; i++) {
                 const current = roadMap[i];
                 const next = roadMap[i + 1]
                 const link = current.edges.find(ed => ed.name === next.name);
-                if (link) link.highlighted = true;
+                if (link) {
+                    console.log('colors[roadIndex]', colors[roadIndex]);
+                    link.highlighted = true;
+                    link.highlightedColor = colors[roadIndex];
+                }
             }
         }
 
@@ -577,6 +607,28 @@ export class Graph {
                 edge.highlighted = false;
             })
         })
+    }
+
+    private static calculateRoadMapSize(roadMap: Array<Vertex>, startVertex?: Vertex): number {
+        let value = 0;
+        for (let i = 0; i < roadMap.length - 1; i++) {
+            const current = roadMap[i];
+            const next = roadMap[i + 1];
+            const link = current.edges.find(ed => ed.name === next.name);
+            if (link) value += link.value;
+        }
+
+        if (startVertex) {
+            const first = roadMap[0];
+            const last = roadMap[roadMap.length - 1];
+            const firstToStart = first.edges.find(ed => ed.name === startVertex.name);
+            const lastToStart = last.edges.find(ed => ed.name === startVertex.name);
+            if (firstToStart && lastToStart) {
+                value += firstToStart.value + lastToStart.value;
+            }
+        }
+
+        return value;
     }
 
 

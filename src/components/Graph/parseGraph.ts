@@ -2,7 +2,7 @@ import { Graph } from '@components/Graph/graph';
 import { RecursiveState } from 'easy-peasy';
 
 export type GraphDataNode = { id: string, name: string, value: number, color?: string };
-export type GraphDataLink = { source: string, target: string, weight: string, highlighted: boolean };
+export type GraphDataLink = { source: string, target: string, weight: string, highlighted: boolean, highlightedColor: string };
 export type GraphData = {
   nodes: Array<GraphDataNode>,
   links: Array<GraphDataLink>
@@ -27,7 +27,8 @@ export const parseGraph = (graph: RecursiveState<Graph>): GraphData => {
         source: vertex.name,
         target: edge.name,
         weight: edge.value > 0 ? edge.value.toString() : '',
-        highlighted: edge.highlighted
+        highlighted: edge.highlighted,
+        highlightedColor: edge.highlightedColor || 'yellow'
       });
     }
   }

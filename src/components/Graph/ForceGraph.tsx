@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ForceGraph2D } from 'react-force-graph';
+import { ForceGraph3D } from 'react-force-graph';
 import { useWindowDimensions } from '@customHooks/useWindowDimensions';
 import { GraphType } from '@components/Graph/graphType';
 import { Link } from '@components/Graph/link';
@@ -26,14 +26,14 @@ const ForceGraph = (): JSX.Element => {
     }
 
     return (
-        <ForceGraph2D
+        <ForceGraph3D
             graphData={forceGraphData} height={height - 61}
             linkDirectionalArrowLength={arrowSize}
             linkWidth={2}
             linkColor={link => {
               const json = JSON.stringify(link);
               const usableLink = JSON.parse(json);
-              return usableLink.highlighted ? 'yellow' : 'grey';
+              return usableLink.highlighted ? usableLink.highlightedColor : 'grey';
             }}
             onNodeRightClick={(node) => removeVertex(`${node.id}`)}
             onLinkRightClick={(link) => {

@@ -6,10 +6,13 @@ export class Edge {
 
   private _highlighted: boolean;
 
+  private _highlightedColor: string;
+
   constructor(name: string, value: number) {
     this._name = name;
     this._value = value;
     this._highlighted = false;
+    this._highlightedColor = '';
   }
 
   public get name(): string {
@@ -34,5 +37,15 @@ export class Edge {
 
   set highlighted(value: boolean) {
     this._highlighted = value;
+  }
+
+  get highlightedColor(): string {
+    return this._highlightedColor;
+  }
+
+  set highlightedColor(value: string) {
+    if (this._highlighted) {
+      this._highlightedColor = value;
+    }
   }
 }

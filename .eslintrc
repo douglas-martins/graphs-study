@@ -19,6 +19,8 @@
     "no-console": "off",
     "no-empty": "off",
     "class-methods-use-this": "off",
+    "object-shorthand": "off",
+    "no-param-reassign": "off",
     "no-unused-vars": [
       "warn",
       {

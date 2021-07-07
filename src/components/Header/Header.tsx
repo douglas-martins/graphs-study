@@ -13,7 +13,7 @@ import { useModal } from '@components/Modal/customHooks/useModal';
 import { Link } from '@components/Graph/link';
 import { GraphType } from '@components/Graph/graphType';
 import {
-    getBfsDfsTemplate,
+    getBfsDfsTemplate, getBookExample,
     getCityTemplates,
     getCompanyAndCustomersTemplate,
     getPrimTemplate,
@@ -58,7 +58,10 @@ const Header = (): JSX.Element => {
             changeCurrentModal({ title: 'Selecione o Vertice de partida e de chegada', type: 'aStar' })
         },
         economies () {
-            runEconomies('');
+            runEconomies('O');
+        },
+        'economies book'() {
+            runEconomies('1');
         },
     };
 
@@ -80,6 +83,9 @@ const Header = (): JSX.Element => {
         },
         economies() {
             setGraph(getCompanyAndCustomersTemplate());
+        },
+        'economies book'() {
+            setGraph(getBookExample());
         }
     };
 
@@ -157,6 +163,7 @@ const Header = (): JSX.Element => {
         elements.push('Welsh Powell');
         elements.push('aStar');
         elements.push('Economies');
+        elements.push('Economies Book');
 
         return elements.map((algorithm, index) => (
             <Dropdown.Item key={algorithm} eventKey={index.toString()}

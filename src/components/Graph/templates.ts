@@ -182,3 +182,36 @@ export function getCompanyAndCustomersTemplate(): Graph {
 
   return graph;
 }
+
+export function getBookExample(): Graph {
+  const graph = new Graph(GraphType.UNDIRECTED);
+
+  graph.addVertex(new Vertex("1", "1"));
+  graph.addVertex(new Vertex("2", "2"));
+  graph.addVertex(new Vertex("3", "3"));
+  graph.addVertex(new Vertex("4", "4"));
+  graph.addVertex(new Vertex("5", "5"));
+  graph.addVertex(new Vertex("6", "6"));
+
+  graph.addEdge("1", "2", 3);
+  graph.addEdge("1", "3", 2);
+  graph.addEdge("1", "4", 5);
+  graph.addEdge("1", "5", 10);
+  graph.addEdge("1", "6", 2);
+
+  graph.addEdge("2", "3", 7);
+  graph.addEdge("2", "4", 11);
+  graph.addEdge("2", "5", 8);
+  graph.addEdge("2", "6", 1);
+
+  graph.addEdge("3", "4", 2);
+  graph.addEdge("3", "5", 9);
+  graph.addEdge("3", "6", 9);
+
+  graph.addEdge("4", "5", 3);
+  graph.addEdge("4", "6", 2);
+
+  graph.addEdge("5", "6", 4);
+
+  return graph;
+}

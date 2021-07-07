@@ -427,36 +427,11 @@ export class Graph {
         return hasVertex;
     }
 
-
     public economies(startVertex: Vertex, maximumVehicleLoad: number): Graph {
         const neighbors = this.getVertexNeighbors(startVertex, []);
-        let economyList = new Array<S>();
 
-        // Calculate S list
-        for (let i = 0; i < neighbors.length; i++) {
-            const iVertex = neighbors[i];
-            for (let j = i; j < neighbors.length; j++) {
-                const jVertex = neighbors[j];
-
-                if (iVertex === jVertex) continue;
-
-                const iToKLink = iVertex.edges.find(edge => edge.name === startVertex.name);
-                const jToKLink = jVertex.edges.find(edge => edge.name === startVertex.name);
-                const iToJLink = iVertex.edges.find(edge => edge.name === jVertex.name);
-
-                // avoid Typescript error
-                if (iToKLink === undefined || jToKLink === undefined || iToJLink === undefined) {
-                    throw new Error("Undefined values")
-                }
-
-                const sValue = iToKLink.value + jToKLink.value - iToJLink.value;
-                const s = new S(iVertex, jVertex, sValue);
-                economyList.push(s);
-            }
-        }
-
-        // Sorts S list in descending order, more economy first
-        economyList = economyList.sort((a, b) => b.value - a.value);
+        let economyList = Graph.calcEconomyList(neighbors, startVertex);
+        economyList = economyList.sort(Graph.moreEconomyFirst);
 
         const roadMaps = new Array<Array<Vertex>>();
         for (const s of economyList) {
@@ -575,7 +550,6 @@ export class Graph {
 
         // Destaca o caminho
         const colors = randomcolor({ count: roadMaps.length, luminosity: 'dark' })
-        console.log('colors', colors);
         for (let roadIndex = 0; roadIndex < roadMaps.length; roadIndex++) {
             const roadMap = roadMaps[roadIndex];
             console.info('Route', roadMap.map(item => item.name).join(" - "));
@@ -585,7 +559,6 @@ export class Graph {
                 const next = roadMap[i + 1]
                 const link = current.edges.find(ed => ed.name === next.name);
                 if (link) {
-                    console.log('colors[roadIndex]', colors[roadIndex]);
                     link.highlighted = true;
                     link.highlightedColor = colors[roadIndex];
                 }
@@ -593,6 +566,39 @@ export class Graph {
         }
 
         return graph;
+    }
+
+    private static calcEconomyList(neighbors: Array<Vertex>, startVertex: Vertex): Array<S> {
+        const economyList = new Array<S>();
+
+        // Calculate S list
+        for (let i = 0; i < neighbors.length; i++) {
+            const iVertex = neighbors[i];
+            for (let j = i; j < neighbors.length; j++) {
+                const jVertex = neighbors[j];
+
+                if (iVertex === jVertex) continue;
+
+                const iToKLink = iVertex.edges.find(edge => edge.name === startVertex.name);
+                const jToKLink = jVertex.edges.find(edge => edge.name === startVertex.name);
+                const iToJLink = iVertex.edges.find(edge => edge.name === jVertex.name);
+
+                // avoid Typescript error
+                if (iToKLink === undefined || jToKLink === undefined || iToJLink === undefined) {
+                    throw new Error("Undefined values")
+                }
+
+                const sValue = iToKLink.value + jToKLink.value - iToJLink.value;
+                const s = new S(iVertex, jVertex, sValue);
+                economyList.push(s);
+            }
+        }
+
+        return economyList;
+    }
+
+    private static moreEconomyFirst(a: S, b: S): number {
+        return  b.value - a.value;
     }
 
     private static isExtremity(list: Array<Vertex>, item: Vertex): Extremity {

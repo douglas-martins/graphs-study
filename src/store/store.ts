@@ -2,6 +2,7 @@ import { action, actionOn, createStore } from 'easy-peasy';
 import { Graph } from '@components/Graph/graph';
 import { GraphType } from '@components/Graph/graphType';
 import { GraphDataLink, GraphDataNode, parseGraph } from '@components/Graph/parseGraph';
+import { toast } from 'react-toastify';
 import StoreModel from './storeModel';
 
 const store = createStore<StoreModel>({
@@ -75,10 +76,11 @@ const store = createStore<StoreModel>({
   }),
 
   runEconomies: action((state, payload) => {
-    const resultGraph = state.graph.economies(payload.startVertex, payload.maxValue);
-    state.graph = resultGraph;
-    state.forceGraphData = parseGraph(resultGraph);
-
+    const resultEconomies = state.graph.economies(payload.startVertex, payload.maxValue);
+    state.graph = resultEconomies.graph;
+    state.forceGraphData = parseGraph(resultEconomies.graph);
+    const content = resultEconomies.roadMapValues.map(item => `Rota = ${item.roadMapOrder}, Distancia Total = ${item.value}`).join("\n")
+    toast.info(content, { autoClose: false, closeOnClick: true, style: { width: '400px' } });
   }),
 
   onChangeGraph: actionOn(

@@ -7,6 +7,7 @@ import { HItem } from '@components/Graph/HItem';
 import { S } from '@components/Graph/s';
 import { Extremity } from '@components/Graph/extremity';
 import randomcolor from "randomcolor"
+import { EconomiesResult, RoadMapValue } from '@components/Graph/economiesResult';
 
 export type HResult = { vertex: Vertex, value: number };
 
@@ -427,7 +428,7 @@ export class Graph {
         return hasVertex;
     }
 
-    public economies(startVertex: Vertex, maximumVehicleLoad: number): Graph {
+    public economies(startVertex: Vertex, maximumVehicleLoad: number): EconomiesResult {
         const neighbors = this.getVertexNeighbors(startVertex, []);
 
         let economyList = Graph.calcEconomyList(neighbors, startVertex);
@@ -527,11 +528,16 @@ export class Graph {
         Graph.clearHighlight(graph);
 
         // Destaca o caminho
+        const roadMapValues = new Array<RoadMapValue>();
         const colors = randomcolor({ count: roadMaps.length, luminosity: 'dark' })
         for (let roadIndex = 0; roadIndex < roadMaps.length; roadIndex++) {
             const roadMap = roadMaps[roadIndex];
-            console.info('Route', roadMap.map(item => item.name).join(" - "));
-            console.info('calculateRoadMapSize', Graph.calculateRoadMapSize(roadMap));
+
+            roadMapValues.push({
+                roadMapOrder: roadMap.map(item => item.name).join(" - "),
+                value: Graph.calculateRoadMapSize(roadMap)
+            });
+
             for (let i = 0; i < roadMap.length - 1; i++) {
                 const current = roadMap[i];
                 const next = roadMap[i + 1]
@@ -543,7 +549,7 @@ export class Graph {
             }
         }
 
-        return graph;
+        return new EconomiesResult(graph, roadMapValues);
     }
 
     private static calcEconomyList(neighbors: Array<Vertex>, startVertex: Vertex): Array<S> {

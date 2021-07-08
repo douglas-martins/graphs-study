@@ -23,6 +23,7 @@
     "no-param-reassign": "off",
     "arrow-body-style": "off",
     "radix": "off",
+    "import/no-cycle": "off",
     "no-unused-vars": [
       "warn",
       {

@@ -435,17 +435,17 @@ export class Graph {
 
         const roadMaps = new Array<Array<Vertex>>();
         for (const s of economyList) {
-            // Descarta valores que não são economias
+            // Valores que não são economias
             if (s.value < 0) {
                 continue;
             }
 
-            // d) Verifica se o par não esta já no mesmo roteiro
+            // Verifica se o par não esta já no mesmo roteiro
             if (roadMaps.some(item => item.includes(s.iVertex) && item.includes(s.jVertex))) {
                 continue;
             }
 
-            // a) Caso os nós i e j não estejam em nenhum roteiro, criar um para eles
+            // Caso os nós i e j não estejam em nenhum roteiro, criar um para eles
             if (!roadMaps.some(item => item.includes(s.iVertex) || item.includes(s.jVertex))) {
                 roadMaps.push([s.iVertex, s.jVertex]);
                 continue;
@@ -454,40 +454,21 @@ export class Graph {
             const iRoad = roadMaps.find(item => item.includes(s.iVertex));
             const jRoad = roadMaps.find(item => item.includes(s.jVertex));
 
-            // b) Se apenas um dos pontos pertence a um roteiro já existente, e esse ponto é um extremidade,
-            // adiciona o outro ponto a essa extremidade
+            // Apenas um dos pontos é a extremidade de um roteiro já existente, adiciona o outro ponto a extremidade
             if (iRoad !== undefined && jRoad === undefined) {
-                // Checa se ultrapassa o limite
-                const iRoadSize = Graph.calculateRoadMapSize(iRoad, startVertex);
-                const linkIJ = s.iVertex.edges.find(ed => ed.name === s.jVertex.name);
-                if (linkIJ && ((iRoadSize + linkIJ.value) > maximumVehicleLoad)) continue;
-
-                if (iRoad[0] === s.iVertex) {
-                    iRoad.unshift(s.jVertex);
-                    continue;
-                } else if (iRoad[iRoad.length - 1] === s.iVertex) {
-                    iRoad.push(s.jVertex);
-                    continue;
-                }
+                if (Graph.willReachTheLimit(s.iVertex, s.jVertex, iRoad, startVertex, maximumVehicleLoad)) continue;
+                Graph.addOnExtremity(iRoad, s.iVertex, s.jVertex);
+                continue;
             }
 
             if (jRoad !== undefined && iRoad === undefined) {
-                // Checa se ultrapassa o limite
-                const jRoadSize = Graph.calculateRoadMapSize(jRoad, startVertex);
-                const linkIJ = s.jVertex.edges.find(ed => ed.name === s.iVertex.name);
-                if (linkIJ && ((jRoadSize + linkIJ.value) > maximumVehicleLoad)) continue;
-
-                if (jRoad[0] === s.jVertex) {
-                    jRoad.unshift(s.iVertex);
-                    continue;
-                } else if (jRoad[jRoad.length - 1] === s.jVertex) {
-                    jRoad.push(s.iVertex);
-                    continue;
-                }
+                if (Graph.willReachTheLimit(s.jVertex, s.iVertex, jRoad, startVertex, maximumVehicleLoad)) continue;
+                Graph.addOnExtremity(jRoad, s.jVertex, s.iVertex);
+                continue;
             }
 
 
-            // c) Caso i e j percencem a roteiros já existentes e ambos são extremidades dele, fundir os dois roteiros
+            // Caso i e j percencem a roteiros já existentes e ambos são extremidades dele, fundir os dois roteiros
             if (iRoad !== undefined && jRoad !== undefined) {
                 const extremityI = Graph.isExtremity(iRoad, s.iVertex);
                 const extremityJ = Graph.isExtremity(jRoad, s.jVertex);
@@ -527,10 +508,7 @@ export class Graph {
             }
         }
 
-
-
-        // e) Caso algum nó fique de fora, criar um roteiro dele com o k
-        // ver se algum neighbor não está na rota e fazer isso
+        // Caso algum nó fique de fora criar uma rota para ele
         for (const neighbor of neighbors) {
             const hasRoadMap = roadMaps.some(roadMap => roadMap.includes(neighbor));
             if (!hasRoadMap) {
@@ -571,7 +549,6 @@ export class Graph {
     private static calcEconomyList(neighbors: Array<Vertex>, startVertex: Vertex): Array<S> {
         const economyList = new Array<S>();
 
-        // Calculate S list
         for (let i = 0; i < neighbors.length; i++) {
             const iVertex = neighbors[i];
             for (let j = i; j < neighbors.length; j++) {
@@ -637,5 +614,24 @@ export class Graph {
         return value;
     }
 
+    private static willReachTheLimit(
+      initialVertex: Vertex,
+      endVertex: Vertex,
+      roadMap: Array<Vertex>,
+      startVertex: Vertex,
+      maximumVehicleLoad: number
+    ) {
+        const roadSize = Graph.calculateRoadMapSize(roadMap, startVertex);
+        const linkIJ = initialVertex.edges.find(ed => ed.name === endVertex.name);
+        return (linkIJ && ((roadSize + linkIJ.value) > maximumVehicleLoad));
+    }
+
+    private static addOnExtremity(roadMap: Array<Vertex>, compareVertex: Vertex, toAddVertex: Vertex) {
+        if (roadMap[0] === compareVertex) {
+            roadMap.unshift(toAddVertex);
+        } else if (roadMap[roadMap.length - 1] === compareVertex) {
+            roadMap.push(toAddVertex);
+        }
+    }
 
 }
